@@ -1,0 +1,14 @@
+- Ajout de La date pour clé primaire dans achat_utilisateur, achat_groupe et Gère
+- Ajout de la version pour la clé primaire dans Modifie
+
+- Correction de données {
+    - Modif de "INSERT INTO AchatUtilisateur VALUES (10, 5, '30-feb-2024');" Pour 29-feb-2024
+    - Modif de "INSERT INTO Modifie VALUES (3, 3, '30-feb-2024', '0.3');" Pour 29-feb-2024
+    - Modif de "INSERT INTO Modifie VALUES (12, 3, '30-feb-2025', '0.9');" Pour 29-feb-2024
+    - Modif de "INSERT INTO Modifie VALUES (12, 3, '29-feb-2025', '0.9');" Pour 28-feb-2025
+    - Modif de "INSERT INTO Gère VALUES (2, 3, '30-feb-2024');" Pour 29-feb-2024
+    - Modif de "INSERT INTO Gère VALUES (5, 1, '30-feb-2025');" Pour 28-feb-2025
+}
+
+
+

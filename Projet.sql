@@ -1,3 +1,16 @@
+Drop Table Utilisateur CASCADE CONSTRAINTS;
+Drop Table Achatgroupe CASCADE CONSTRAINTS;
+Drop Table Achatutilisateur CASCADE CONSTRAINTS;
+Drop Table Appartient CASCADE CONSTRAINTS;
+Drop Table Employé CASCADE CONSTRAINTS;
+Drop Table Groupe CASCADE CONSTRAINTS;
+Drop Table Gère CASCADE CONSTRAINTS;
+Drop Table Inclue CASCADE CONSTRAINTS;
+Drop Table Licence CASCADE CONSTRAINTS;
+Drop Table Logiciel CASCADE CONSTRAINTS;
+Drop Table Modifie CASCADE CONSTRAINTS;
+Drop Table Ticket CASCADE CONSTRAINTS;
+
 CREATE TABLE Utilisateur (
     id_utilisateur NUMBER(10) NOT NULL,
     Nom VARCHAR2(30) NOT NULL,
@@ -49,7 +62,7 @@ CREATE TABLE AchatUtilisateur (
     id_utilisateur NOT NULL,
     id_licence NOT NULL,
     Date_achat DATE NOT NULL,
-    PRIMARY KEY (id_utilisateur, id_licence),
+    PRIMARY KEY (id_utilisateur, id_licence, Date_achat),
     FOREIGN KEY (id_utilisateur) REFERENCES Utilisateur(id_utilisateur),
     FOREIGN KEY (id_licence) REFERENCES Licence(id_licence)
 );
@@ -58,7 +71,7 @@ CREATE TABLE AchatGroupe (
     id_groupe NOT NULL,
     id_licence NOT NULL,
     Date_achat DATE NOT NULL,
-    PRIMARY KEY (id_groupe, id_licence),
+    PRIMARY KEY (id_groupe, id_licence, Date_achat),
     FOREIGN KEY (id_groupe) REFERENCES Groupe(id_groupe),
     FOREIGN KEY (id_licence) REFERENCES Licence(id_licence)
 );
@@ -82,7 +95,7 @@ CREATE TABLE Modifie (
     id_logiciel NOT NULL,
     Date_modification DATE,
     Version VARCHAR2(10),
-    PRIMARY KEY (id_employé, id_logiciel),
+    PRIMARY KEY (id_employé, id_logiciel, version),
     FOREIGN KEY (id_employé) REFERENCES Employé(id_employé),
     FOREIGN KEY (id_logiciel) REFERENCES Logiciel(id_logiciel)
 );
@@ -91,7 +104,7 @@ CREATE TABLE Gère (
     id_employé NOT NULL,
     id_licence NOT NULL,
     Date_modification DATE,
-    PRIMARY KEY (id_employé, id_licence),
+    PRIMARY KEY (id_employé, id_licence, Date_modification),
     FOREIGN KEY (id_employé) REFERENCES Employé(id_employé),
     FOREIGN KEY (id_licence) REFERENCES Licence(id_licence)
 );
@@ -150,6 +163,8 @@ INSERT INTO Utilisateur VALUES (27, 'Flores', 'Gabriela', 'gabrielaflores@gmail.
 INSERT INTO Utilisateur VALUES (28, 'Gomez', 'Andres', 'andresgomez@gmail.com', 28, '25-apr-2025', '0787420052', '123 Cranberry Street, Warsaw', 'aWEsOme42');
 INSERT INTO Utilisateur VALUES (29, 'Reyes', 'Valentina', 'valentinareyes@gmail.com', 40, '30-may-2025', '0662352068', '456 Strawberry Street, London', 'password18');
 INSERT INTO Utilisateur VALUES (30, 'Morales', 'Camila', 'camilamorales@free.fr', 27, '05-jun-2025', '0688402069', '789 Raspberry Street, Paris', 'password19');
+select * from Utilisateur;
+
 
 -- Les données ont été générées par IA à partir du 1er insert. Quelques valeurs, principalement les numéros de téléphone, les mots de passe et les noms des villes ont ensuite été modifiées pour plus de réalisme.
 
@@ -164,6 +179,7 @@ INSERT INTO Groupe VALUES (7, 'Groupe 7', 'Groupe de test 7');
 INSERT INTO Groupe VALUES (8, 'Groupe 8', 'Groupe de test 8');
 INSERT INTO Groupe VALUES (9, 'Groupe 9', 'Groupe de test 9');
 INSERT INTO Groupe VALUES (10, 'Groupe 10', 'Groupe de test 10');
+select * from Groupe;
 
 -- Insert Logiciel
 INSERT INTO Logiciel VALUES (1, 'Logiciel 1', 'Logiciel de test 1');
@@ -171,6 +187,8 @@ INSERT INTO Logiciel VALUES (2, 'Logiciel 2', 'Logiciel de test 2');
 INSERT INTO Logiciel VALUES (3, 'Logiciel 3', 'Logiciel de test 3');
 INSERT INTO Logiciel VALUES (4, 'Logiciel 4', 'Logiciel de test 4');
 INSERT INTO Logiciel VALUES (5, 'Logiciel 5', 'Logiciel de test 5');
+INSERT INTO Logiciel VALUES (6, 'Logiciel 6', 'Logiciel de test 6');
+select * from Logiciel;
 
 -- Insert Ticket
 INSERT INTO Ticket VALUES (1, 'Bug bizarre', 'Il y a un bug quand on charge le fichier excel dans le Logiciel 1', 1, '10-jan-2023', 'Traité');
@@ -203,6 +221,7 @@ INSERT INTO Ticket VALUES (27, 'Ticket 27', 'Contenu du ticket 27', 27, '20-mar-
 INSERT INTO Ticket VALUES (28, 'Ticket 28', 'Contenu du ticket 28', 28, '25-apr-2025', 'En attente');
 INSERT INTO Ticket VALUES (29, 'Ticket 29', 'Contenu du ticket 29', 29, '30-may-2025', 'En attente');
 INSERT INTO Ticket VALUES (30, 'Ticket 30', 'Contenu du ticket 30', 30, '05-jun-2025', 'En attente');
+select * from Ticket;
 
 -- Insert Licence
 INSERT INTO Licence VALUES (1, 'Un mois', 10, 'Licence 1');
@@ -211,9 +230,10 @@ INSERT INTO Licence VALUES (3, 'Un mois', 19.90, 'Licence 3');
 INSERT INTO Licence VALUES (4, 'Un an', 150, 'Licence 4');
 INSERT INTO Licence VALUES (5, 'Un mois', 49.90, 'Licence 5');
 INSERT INTO Licence VALUES (6, 'Un an', 200, 'Licence 6');
+select * from Licence;
+
 
 -- Insert AchatUtilisateur
-INSERT INTO AchatUtilisateur VALUES (1, 1, '10-jan-2023');
 INSERT INTO AchatUtilisateur VALUES (1, 1, '10-feb-2023');
 INSERT INTO AchatUtilisateur VALUES (2, 2, '15-feb-2023');
 INSERT INTO AchatUtilisateur VALUES (1, 1, '10-mar-2023');
@@ -239,7 +259,7 @@ INSERT INTO AchatUtilisateur VALUES (11, 6, '05-jan-2024');
 INSERT INTO AchatUtilisateur VALUES (10, 5, '30-jan-2024');
 INSERT INTO AchatUtilisateur VALUES (12, 6, '05-feb-2024');
 INSERT INTO AchatUtilisateur VALUES (2, 2, '15-feb-2024');
-INSERT INTO AchatUtilisateur VALUES (10, 5, '30-feb-2024');
+INSERT INTO AchatUtilisateur VALUES (10, 5, '29-feb-2024');
 INSERT INTO AchatUtilisateur VALUES (13, 1, '10-mar-2024');
 INSERT INTO AchatUtilisateur VALUES (13, 1, '10-apr-2024');
 INSERT INTO AchatUtilisateur VALUES (14, 2, '15-apr-2024');
@@ -255,6 +275,9 @@ INSERT INTO AchatUtilisateur VALUES (19, 1, '10-oct-2024');
 INSERT INTO AchatUtilisateur VALUES (20, 2, '15-oct-2024');
 INSERT INTO AchatUtilisateur VALUES (19, 1, '10-nov-2024');
 INSERT INTO AchatUtilisateur VALUES (21, 4, '20-nov-2024');
+select * from AchatUtilisateur
+    order by date_achat;
+
 
 -- Insert AchatGroupe
 INSERT INTO AchatGroupe VALUES (1, 4, '10-jan-2023');
@@ -287,6 +310,8 @@ INSERT INTO AchatGroupe VALUES (7, 4, '10-jul-2025');
 INSERT INTO AchatGroupe VALUES (8, 2, '15-aug-2025');
 INSERT INTO AchatGroupe VALUES (9, 2, '20-sep-2025');
 INSERT INTO AchatGroupe VALUES (10, 6, '25-oct-2025');
+select * from AchatGroupe;
+
 
 -- Insert Employé
 INSERT INTO Employé VALUES (1, 'Johnson', 'David', 'david.johnson@saas.com', 28, '0611004081', '10 Downing Street, London', 'Chef', '60000.00', '01-mar-2022');
@@ -304,6 +329,8 @@ INSERT INTO Employé VALUES (12, 'Lewis', 'Olivia', 'olivia.lewis@saas.com', 25,
 INSERT INTO Employé VALUES (13, 'Walker', 'James', 'james.walker@saas.com', 29, '0687451236', '963 Sunset Boulevard, Los Angeles', 'Commercial', '45000.00', '12-may-2024');
 INSERT INTO Employé VALUES (14, 'Brant', 'Ava', 'ava.brant@saas.com', 26, '0654789321', '741 Vine Street, Los Angeles', 'Développeur', '55000.00', '27-jul-2024');
 INSERT INTO Employé VALUES (15, 'Young', 'William', 'william.young@saas.com', 30, '0654024060', '369 Hollywood Boulevard, Los Angeles', 'Commercial', '45000.00', '11-oct-2024');
+select * from Employé;
+
 
 -- Insert Modifie
 INSERT INTO Modifie VALUES (1, 1, '10-mar-2022', '0.1');
@@ -325,7 +352,7 @@ INSERT INTO Modifie VALUES (6, 2, '25-oct-2023', '1.0');
 INSERT INTO Modifie VALUES (7, 1, '30-nov-2023', '1.4');
 INSERT INTO Modifie VALUES (10, 3, '20-dec-2023', '0.1');
 INSERT INTO Modifie VALUES (12, 3, '25-jan-2024', '0.2');
-INSERT INTO Modifie VALUES (3, 3, '30-feb-2024', '0.3');
+INSERT INTO Modifie VALUES (3, 3, '29-feb-2024', '0.3');
 INSERT INTO Modifie VALUES (4, 4, '05-mar-2024', '0.1');
 INSERT INTO Modifie VALUES (10, 3, '10-apr-2024', '0.4');
 INSERT INTO Modifie VALUES (12, 3, '15-may-2024', '0.6');
@@ -337,7 +364,7 @@ INSERT INTO Modifie VALUES (10, 3, '10-oct-2024', '0.7');
 INSERT INTO Modifie VALUES (12, 3, '15-nov-2024', '0.8');
 INSERT INTO Modifie VALUES (7, 2, '20-dec-2024', '1.2');
 INSERT INTO Modifie VALUES (6, 5, '25-jan-2025', '0.2');
-INSERT INTO Modifie VALUES (12, 3, '30-feb-2025', '0.9');
+INSERT INTO Modifie VALUES (12, 3, '28-feb-2025', '0.9');
 INSERT INTO Modifie VALUES (4, 4, '05-mar-2025', '0.3');
 INSERT INTO Modifie VALUES (10, 3, '10-apr-2025', '1.0');
 INSERT INTO Modifie VALUES (12, 3, '15-may-2025', '1.1');
@@ -345,6 +372,8 @@ INSERT INTO Modifie VALUES (7, 2, '20-jun-2025', '1.3');
 INSERT INTO Modifie VALUES (6, 5, '25-jul-2025', '0.4');
 INSERT INTO Modifie VALUES (3, 1, '30-aug-2025', '1.5');
 INSERT INTO Modifie VALUES (7, 4, '05-sep-2025', '1.0');
+select * from Modifie;
+
 
 -- Insert Gère
 INSERT INTO Gère VALUES (1, 1, '20-jun-2022');
@@ -363,7 +392,7 @@ INSERT INTO Gère VALUES (9, 1, '25-oct-2023');
 INSERT INTO Gère VALUES (2, 2, '30-nov-2023');
 INSERT INTO Gère VALUES (2, 4, '20-dec-2023');
 INSERT INTO Gère VALUES (8, 5, '25-jan-2024');
-INSERT INTO Gère VALUES (2, 3, '30-feb-2024');
+INSERT INTO Gère VALUES (2, 3, '29-feb-2024');
 INSERT INTO Gère VALUES (5, 4, '05-mar-2024');
 INSERT INTO Gère VALUES (2, 5, '10-apr-2024');
 INSERT INTO Gère VALUES (5, 6, '15-may-2024');
@@ -375,10 +404,12 @@ INSERT INTO Gère VALUES (5, 6, '10-oct-2024');
 INSERT INTO Gère VALUES (9, 2, '15-nov-2024');
 INSERT INTO Gère VALUES (8, 2, '20-dec-2024');
 INSERT INTO Gère VALUES (2, 5, '25-jan-2025');
-INSERT INTO Gère VALUES (5, 1, '30-feb-2025');
+INSERT INTO Gère VALUES (5, 1, '28-feb-2025');
 INSERT INTO Gère VALUES (8, 6, '05-mar-2025');
 INSERT INTO Gère VALUES (5, 2, '10-apr-2025');
+select * from Gère;
 
+    
 -- Insert Appartient
 INSERT INTO Appartient VALUES (1, 1);
 INSERT INTO Appartient VALUES (1, 2);
@@ -416,6 +447,8 @@ INSERT INTO Appartient VALUES (9, 29);
 INSERT INTO Appartient VALUES (9, 30);
 INSERT INTO Appartient VALUES (9, 28);
 INSERT INTO Appartient VALUES (10, 30);
+select * from Appartient;
+
 
 -- Insert Inclue
 INSERT INTO Inclue VALUES (1, 1);
@@ -440,3 +473,6 @@ INSERT INTO Inclue VALUES (6, 2);
 INSERT INTO Inclue VALUES (6, 3);
 INSERT INTO Inclue VALUES (6, 4);
 INSERT INTO Inclue VALUES (6, 5);
+select * from Inclue;
+
+
