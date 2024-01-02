@@ -1,3 +1,5 @@
+-- A/ Création du schéma de la base de données
+
 Drop Table Utilisateur CASCADE CONSTRAINTS;
 Drop Table Achatgroupe CASCADE CONSTRAINTS;
 Drop Table Achatutilisateur CASCADE CONSTRAINTS;
@@ -124,6 +126,8 @@ CREATE TABLE Inclue (
     FOREIGN KEY (id_logiciel) REFERENCES Logiciel(id_logiciel),
     FOREIGN KEY (id_licence) REFERENCES Licence(id_licence)
 );
+
+-- B/ Jeu de données
 
 -- Le jeu de données doit être soigneusement préparé et permettre la validation des requêtes
 -- complexes qui seront posées par la suite. Il doit y avoir au moins 30 n-uplets par table. Les
@@ -454,9 +458,7 @@ INSERT INTO Inclue VALUES (6, 3);
 INSERT INTO Inclue VALUES (6, 4);
 INSERT INTO Inclue VALUES (6, 5);
 
-
-
-
+--C/ Manipulation des données
 
 -- Quels sont tous les utilisateurs ?
 select * from Utilisateur;
@@ -484,20 +486,20 @@ select * from Appartient;
 -- Quels logiciels sont inclus dans quelles licences ?
 select * from Inclue;
 
---Quels groupes et combien ont-ils acheté de licences ?
+-- Quels groupes et combien ont-ils acheté de licences ?
 select distinct g.Nom, count(ag.id_groupe) as "Nombre de licences achetées"
 from Groupe g, AchatGroupe ag
 where g.id_groupe = ag.id_groupe
 group by g.Nom;
 
---Combien de licences ont acheté en moyenne les groupes ?
+-- Combien de licences ont acheté en moyenne les groupes ?
 select avg(nb_licences) as "Nombre de licences achetées en moyenne par groupe"
 from (select count(ag.id_groupe) as nb_licences
     from Groupe g, AchatGroupe ag
     where g.id_groupe = ag.id_groupe
     group by g.Nom);
 
---Combien d'employés sont Développeurs ? Support ? Commercial ?
+-- Combien d'employés sont Développeurs ? Support ? Commercial ?
 select count(*) as "Nombre d'employés Développeurs"
 from Employé
 where Poste = 'Développeur';
@@ -508,11 +510,11 @@ select count(*) as "Nombre d'employés Commercial"
 from Employé
 where Poste = 'Commercial';
 
---Combien d'employés dans la SAAS ?
+-- Combien d'employés dans la SAAS ?
 select count(*) as "Nombre d'employés dans la SAAS"
 from Employé;
 
---Quelle est la moyenne des salaires des développeurs ? du support ? des commerciaux ? de tous ?
+-- Quelle est la moyenne des salaires des développeurs ? du support ? des commerciaux ? de tous ?
 select avg(Salaire) as "Salaire moyen des Développeurs"
 from Employé
 where Poste = 'Développeur';
@@ -525,7 +527,7 @@ where Poste = 'Commercial';
 select avg(Salaire) as "Salaire moyen de tous les employés"
 from Employé;
 
---Combien de tickets ont été traités ? Combien sont en attente ?
+-- Combien de tickets ont été traités ? Combien sont en attente ?
 select count(*) as "Nombre de tickets traités"
 from Ticket
 where Statut = 'Traité';
@@ -533,33 +535,33 @@ select count(*) as "Nombre de tickets en attente"
 from Ticket
 where Statut = 'En attente';
 
---Quels sont les utilisateurs qui sont aussi employés ? (même email)
+-- Quels sont les utilisateurs qui sont aussi employés ? (même email)
 select u.Nom, u.Prenom, u.Email
 from Utilisateur u, Employé e
 where u.Email = e.Email;
 
---Combien de ventes a fait le SAAS ? Combien d’argent ?
+-- Combien de ventes a fait le SAAS ? Combien d’argent ?
 select count(*) as "Nombre de ventes"
 from AchatUtilisateur;
 select sum(Prix) as "Argent gagné"
 from AchatUtilisateur au, Licence l
 where au.id_licence = l.id_licence;
 
---Quelle est la licence la plus vendue ?
+-- Quelle est la licence la plus vendue ?
 select l.id_licence, count(au.id_licence) as "Nombre de ventes"
 from AchatUtilisateur au, Licence l
 where au.id_licence = l.id_licence
 group by l.id_licence
 order by count(au.id_licence) desc;
 
---Quels utilisateurs ont acheté plusieurs fois des licences ?
+-- Quels utilisateurs ont acheté plusieurs fois des licences ?
 select u.Nom, u.Prenom, u.Email, count(au.id_licence) as "Nombre de licences"
 from Utilisateur u, AchatUtilisateur au
 where u.id_utilisateur = au.id_utilisateur
 group by u.Nom, u.Prenom, u.Email
 having count(au.id_licence) > 1;
 
---Quels sont les utilisateurs qui ont plusieurs licences ? (donc personnelle et de groupe) - WIP
+-- Quels sont les utilisateurs qui ont plusieurs licences ? (donc personnelle et de groupe) - WIP
 select distinct u.Nom, u.Prenom, u.Email, l.id_licence as "Licence personnelle", l2.id_licence as "Licence du groupe", g.Nom
 from Utilisateur u, AchatUtilisateur au, Licence l, AchatGroupe ag, Licence l2, Groupe g
 where u.id_utilisateur = au.id_utilisateur
@@ -569,7 +571,7 @@ and ag.id_licence = l2.id_licence
 and l.id_licence != l2.id_licence
 order by u.Email;
 
---Quels utilisateurs ont le logiciel donné (4) ?
+-- Quels utilisateurs ont le logiciel donné (4) ?
 select distinct u.Nom, u.Prenom, u.Email
 from Utilisateur u, AchatUtilisateur au, Licence l, Inclue i
 where u.id_utilisateur = au.id_utilisateur
@@ -577,10 +579,205 @@ and au.id_licence = l.id_licence
 and l.id_licence = i.id_licence
 and i.id_logiciel = 4;
 
---Quels logiciels ont été modifiés le plus suite à des Ticket ? - WIP
+-- Quels logiciels ont été modifiés le plus suite à des Ticket ? - WIP
 SELECT l.Nom AS "Nom du logiciel", COUNT(*) AS "Nombre de modifications"
 FROM Ticket t, Modifie m
 JOIN Logiciel l ON m.id_logiciel = l.id_logiciel
 WHERE t.Objet LIKE CONCAT('%', l.Nom, '%') OR t.Contenu LIKE CONCAT('%', l.Nom, '%')
 GROUP BY l.Nom
 ORDER BY COUNT(*) DESC;
+
+-- D/ Vues
+
+-- Vue 1 : Affiche les détails des licences achetées par les utilisateurs.
+CREATE VIEW UtilisateurAchatLicence AS
+SELECT U.id_utilisateur, U.Nom, U.Prenom, A.Date_achat, L.*
+FROM Utilisateur U
+JOIN AchatUtilisateur A ON U.id_utilisateur = A.id_utilisateur
+JOIN Licence L ON A.id_licence = L.id_licence;
+SELECT * FROM UtilisateurAchatLicence;
+
+-- Vue 2 : Affiche les détails des licences achetées par les groupes.
+CREATE VIEW GroupeAchatLicence AS
+SELECT G.id_groupe, G.Nom, A.Date_achat, L.*
+FROM Groupe G
+JOIN AchatGroupe A ON G.id_groupe = A.id_groupe
+JOIN Licence L ON A.id_licence = L.id_licence;
+SELECT * FROM GroupeAchatLicence;
+
+-- Vue 3 : Affiche les détails des modifications de logiciels effectuées par les employés.
+CREATE VIEW EmployeModifieLogiciel AS
+SELECT E.id_employé, E.Nom AS "Nom Employe", E.Prenom, M.Date_modification, M.Version, L.*
+FROM Employé E
+JOIN Modifie M ON E.id_employé = M.id_employé
+JOIN Logiciel L ON M.id_logiciel = L.id_logiciel;
+SELECT * FROM EmployeModifieLogiciel;
+
+-- Vue 4 : Affiche les détails de la gestion des licences par les employés.
+CREATE VIEW EmployeGereLicence AS
+SELECT E.id_employé, E.Nom as "Nom Employe", E.Prenom, G.Date_modification, L.*
+FROM Employé E
+JOIN Gère G ON E.id_employé = G.id_employé
+JOIN Licence L ON G.id_licence = L.id_licence;
+SELECT * FROM EmployeGereLicence;
+
+-- Vue 5 : NombreUtilisateursParGroupe récupère le nombre d'utilisateurs par groupe.
+CREATE VIEW NombreUtilisateursParGroupe AS
+SELECT G.id_groupe, G.Nom, COUNT(A.id_utilisateur) AS Nombre_Utilisateurs
+FROM Groupe G LEFT JOIN Appartient A ON G.id_groupe = A.id_groupe
+GROUP BY G.id_groupe, G.Nom;
+SELECT * FROM NombreUtilisateursParGroupe;
+
+-- Vue 6 : StatistiquesUtilisateur récupère les utilisateurs ainsi que le nombre d'achat de licences et les dépenses moyennes de chaque utilisateur.
+CREATE VIEW StatistiquesUtilisateur AS
+SELECT U.id_utilisateur, U.Nom, U.Prenom, COUNT(A.id_licence) AS Nombre_Achats, AVG(L.Prix) AS Prix_Moyen
+FROM Utilisateur U LEFT JOIN AchatUtilisateur A ON U.id_utilisateur = A.id_utilisateur LEFT JOIN Licence L ON A.id_licence = L.id_licence
+GROUP BY U.id_utilisateur, U.Nom, U.Prenom;
+SELECT * FROM StatistiquesUtilisateur;
+
+-- Vue 7 : StatistiquesGroupe récupère les groupes ainsi que le nombre d'achat de licences et la dépense totale du groupe.
+CREATE VIEW StatistiquesGroupe AS
+SELECT G.id_groupe, G.Nom, COUNT(A.id_licence) AS Nombre_Achats, SUM(L.Prix) AS Prix_Total
+FROM Groupe G LEFT JOIN AchatGroupe A ON G.id_groupe = A.id_groupe LEFT JOIN Licence L ON A.id_licence = L.id_licence
+GROUP BY G.id_groupe, G.Nom;
+SELECT * FROM StatistiquesGroupe;
+
+-- Vue 8 : SalaireMoyenParPoste récupère la moyenne des salaires des employés selon leur poste.
+CREATE VIEW SalaireMoyenParPoste AS
+SELECT Poste, AVG(Salaire) AS Salaire_Moyen
+FROM Employé
+GROUP BY Poste;
+SELECT * FROM SalaireMoyenParPoste;
+
+GRANT SELECT ON UtilisateurAchatLicence TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON GroupeAchatLicence TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON EmployeModifieLogiciel TO Employé WHERE Poste = 'Développeur';
+GRANT SELECT ON EmployeGereLicence TO Employé WHERE Poste = 'Commercial';
+-- Donner l'accès aux membres du groupe ? Si oui, comment ?
+GRANT SELECT ON NombreUtilisateursParGroupe TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON StatistiquesUtilisateur TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON StatistiquesGroupe TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON SalaireMoyenParPoste TO Employé WHERE Poste = 'Chef';
+
+-- E/ Intégrité des données : les triggers
+
+-- Trigger 1 : Un utilisateur ne peut pas acheter une licence si il a déjà acheté la même licence.
+CREATE OR REPLACE TRIGGER AchatLicenceUtilisateurDoublon
+BEFORE INSERT ON AchatUtilisateur
+FOR EACH ROW
+DECLARE
+    nb_achats INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO nb_achats
+    FROM AchatUtilisateur
+    WHERE id_utilisateur = :NEW.id_utilisateur
+    AND id_licence = :NEW.id_licence;
+    IF nb_achats > 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Cet utilisateur a déjà acheté cette licence.');
+    END IF;
+END;
+
+-- Trigger 2 : Un utilisateur peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
+CREATE OR REPLACE TRIGGER AchatLicenceUtilisateurUpgrade
+BEFORE INSERT ON AchatUtilisateur
+FOR EACH ROW
+DECLARE
+    prix_licence_actuelle NUMBER;
+    nb_jours_utilises NUMBER;
+    duree_licence NUMBER;
+BEGIN
+    SELECT Prix INTO prix_licence_actuelle
+    FROM AchatUtilisateur au, Licence l
+    WHERE au.id_utilisateur = :NEW.id_utilisateur
+    AND au.id_licence = l.id_licence;
+    
+    SELECT Duree INTO duree_licence
+    FROM Licence
+    WHERE id_licence = :NEW.id_licence;
+    
+    SELECT COUNT(*) INTO nb_jours_utilises
+    FROM AchatUtilisateur
+    WHERE id_utilisateur = :NEW.id_utilisateur
+    AND id_licence = :NEW.id_licence;
+    
+    IF prix_licence_actuelle > :NEW.Prix THEN
+        :NEW.Prix := :NEW.Prix - (prix_licence_actuelle / duree_licence * nb_jours_utilises);
+    END IF;
+END;
+
+-- Trigger 3 : Un groupe est supprimé si tous les membres ont quitté le groupe.
+CREATE OR REPLACE TRIGGER SuppressionGroupe
+AFTER DELETE ON Appartient
+FOR EACH ROW
+DECLARE
+    nb_membres INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO nb_membres
+    FROM Appartient
+    WHERE id_groupe = :OLD.id_groupe;
+    IF nb_membres = 0 THEN
+        DELETE FROM Groupe
+        WHERE id_groupe = :OLD.id_groupe;
+    END IF;
+END;
+
+-- Trigger 4 : Un groupe ne peut pas acheter une licence si il a déjà acheté la même licence.
+CREATE OR REPLACE TRIGGER AchatLicenceGroupeDoublon
+BEFORE INSERT ON AchatGroupe
+FOR EACH ROW
+DECLARE
+    nb_achats INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO nb_achats
+    FROM AchatGroupe
+    WHERE id_groupe = :NEW.id_groupe
+    AND id_licence = :NEW.id_licence;
+    IF nb_achats > 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Ce groupe a déjà acheté cette licence.');
+    END IF;
+END;
+
+-- Trigger 5 : Un groupe peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
+CREATE OR REPLACE TRIGGER AchatLicenceGroupeUpgrade
+BEFORE INSERT ON AchatGroupe
+FOR EACH ROW
+DECLARE
+    prix_licence_actuelle NUMBER;
+    nb_jours_utilises NUMBER;
+    duree_licence NUMBER;
+BEGIN
+    SELECT Prix INTO prix_licence_actuelle
+    FROM AchatGroupe ag, Licence l
+    WHERE ag.id_groupe = :NEW.id_groupe
+    AND ag.id_licence = l.id_licence;
+    
+    SELECT Duree INTO duree_licence
+    FROM Licence
+    WHERE id_licence = :NEW.id_licence;
+    
+    SELECT COUNT(*) INTO nb_jours_utilises
+    FROM AchatGroupe
+    WHERE id_groupe = :NEW.id_groupe
+    AND id_licence = :NEW.id_licence;
+    
+    IF prix_licence_actuelle > :NEW.Prix THEN
+        :NEW.Prix := :NEW.Prix - (prix_licence_actuelle / duree_licence * nb_jours_utilises);
+    END IF;
+END;
+
+-- Trigger 6 : Un utilisateur qui a acheté la même licence mensuelle 12 fois obtient 1 mois gratuit.
+CREATE OR REPLACE TRIGGER ReductionLicenceMensuelle
+BEFORE INSERT ON AchatUtilisateur
+FOR EACH ROW
+DECLARE
+    nb_achats INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO nb_achats
+    FROM AchatUtilisateur au, Licence l
+    WHERE au.id_utilisateur = :NEW.id_utilisateur
+    AND au.id_licence = l.id_licence
+    AND l.Duree = "Un mois";
+    IF nb_achats = 12 THEN
+        :NEW.Date_achat := :NEW.Date_achat + 30;
+    END IF;
+END;
