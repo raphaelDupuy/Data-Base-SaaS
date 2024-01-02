@@ -1,3 +1,8 @@
+Déplacement de toutes les requêtes existantes à la fin.
+Ajout de toutes les requêtes indiquées dans le doc. (il y en a 2 qui ne marchent pas encore WIP)
+
+---------------------------------
+
 - Ajout de La date pour clé primaire dans achat_utilisateur, achat_groupe et Gère
 - Ajout de la version pour la clé primaire dans Modifie
 
@@ -9,6 +14,3 @@
     - Modif de "INSERT INTO Gère VALUES (2, 3, '30-feb-2024');" Pour 29-feb-2024
     - Modif de "INSERT INTO Gère VALUES (5, 1, '30-feb-2025');" Pour 28-feb-2025
 }
-
-
-
