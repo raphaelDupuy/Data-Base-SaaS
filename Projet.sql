@@ -14,7 +14,7 @@ Drop Table Ticket CASCADE CONSTRAINTS;
 CREATE TABLE Utilisateur (
     id_utilisateur NUMBER(10) NOT NULL,
     Nom VARCHAR2(30) NOT NULL,
-    Prénom VARCHAR2(20) NOT NULL,
+    Prenom VARCHAR2(20) NOT NULL,
     Email VARCHAR2(50) NOT NULL,
     Age NUMBER(3),
     Date_inscription DATE,
@@ -79,7 +79,7 @@ CREATE TABLE AchatGroupe (
 CREATE TABLE Employé (
     id_employé NUMBER(10) NOT NULL,
     Nom VARCHAR2(30),
-    Prénom VARCHAR2(20),
+    Prenom VARCHAR2(20),
     Email VARCHAR2(50) NOT NULL,
     Age NUMBER(3),
     Num_tel CHAR(10),
@@ -163,23 +163,20 @@ INSERT INTO Utilisateur VALUES (27, 'Flores', 'Gabriela', 'gabrielaflores@gmail.
 INSERT INTO Utilisateur VALUES (28, 'Gomez', 'Andres', 'andresgomez@gmail.com', 28, '25-apr-2025', '0787420052', '123 Cranberry Street, Warsaw', 'aWEsOme42');
 INSERT INTO Utilisateur VALUES (29, 'Reyes', 'Valentina', 'valentinareyes@gmail.com', 40, '30-may-2025', '0662352068', '456 Strawberry Street, London', 'password18');
 INSERT INTO Utilisateur VALUES (30, 'Morales', 'Camila', 'camilamorales@free.fr', 27, '05-jun-2025', '0688402069', '789 Raspberry Street, Paris', 'password19');
-select * from Utilisateur;
 
-
--- Les données ont été générées par IA à partir du 1er insert. Quelques valeurs, principalement les numéros de téléphone, les mots de passe et les noms des villes ont ensuite été modifiées pour plus de réalisme.
+-- Les données ont été générées par IA à partir du 1er insert fait manuellemnt. Quelques valeurs, principalement les numéros de téléphone, les mots de passe et les noms des villes ont ensuite été modifiées pour plus de réalisme.
 
 -- Insert Groupe
-INSERT INTO Groupe VALUES (1, 'Groupe 1', 'Groupe de test 1');
-INSERT INTO Groupe VALUES (2, 'Groupe 2', 'Groupe de test 2');
-INSERT INTO Groupe VALUES (3, 'Groupe 3', 'Groupe de test 3');
-INSERT INTO Groupe VALUES (4, 'Groupe 4', 'Groupe de test 4');
-INSERT INTO Groupe VALUES (5, 'Groupe 5', 'Groupe de test 5');
+INSERT INTO Groupe VALUES (1, 'Dassault Lead Tech', 'Groupe Dassault - Test du SAAS pour de futures opérations commerciales');
+INSERT INTO Groupe VALUES (2, 'Air France', 'Groupe Air France');
+INSERT INTO Groupe VALUES (3, 'Sanofi', 'Groupe de développement des OpEx');
+INSERT INTO Groupe VALUES (4, 'LVMH', 'Département des Opex');
+INSERT INTO Groupe VALUES (5, 'General Motors', 'The brand new commercial motors');
 INSERT INTO Groupe VALUES (6, 'Groupe 6', 'Groupe de test 6');
 INSERT INTO Groupe VALUES (7, 'Groupe 7', 'Groupe de test 7');
 INSERT INTO Groupe VALUES (8, 'Groupe 8', 'Groupe de test 8');
 INSERT INTO Groupe VALUES (9, 'Groupe 9', 'Groupe de test 9');
-INSERT INTO Groupe VALUES (10, 'Groupe 10', 'Groupe de test 10');
-select * from Groupe;
+INSERT INTO Groupe VALUES (10, 'Le Super Groupe de Camila', 'Groupe de Camila');
 
 -- Insert Logiciel
 INSERT INTO Logiciel VALUES (1, 'Logiciel 1', 'Logiciel de test 1');
@@ -188,21 +185,20 @@ INSERT INTO Logiciel VALUES (3, 'Logiciel 3', 'Logiciel de test 3');
 INSERT INTO Logiciel VALUES (4, 'Logiciel 4', 'Logiciel de test 4');
 INSERT INTO Logiciel VALUES (5, 'Logiciel 5', 'Logiciel de test 5');
 INSERT INTO Logiciel VALUES (6, 'Logiciel 6', 'Logiciel de test 6');
-select * from Logiciel;
 
 -- Insert Ticket
 INSERT INTO Ticket VALUES (1, 'Bug bizarre', 'Il y a un bug quand on charge le fichier excel dans le Logiciel 1', 1, '10-jan-2023', 'Traité');
-INSERT INTO Ticket VALUES (2, 'Ticket 2', 'Contenu du ticket 2', 2, '15-feb-2023', 'Traité');
-INSERT INTO Ticket VALUES (3, 'Ticket 3', 'Contenu du ticket 3', 3, '20-mar-2023', 'Traité');
-INSERT INTO Ticket VALUES (4, 'Ticket 4', 'Contenu du ticket 4', 4, '25-apr-2023', 'Traité');
+INSERT INTO Ticket VALUES (2, 'Ticket 2', 'Logiciel 2', 2, '15-feb-2023', 'Traité');
+INSERT INTO Ticket VALUES (3, 'Ticket 3', 'Contenu du ticket 3, blabla Logiciel 2', 3, '20-mar-2023', 'Traité');
+INSERT INTO Ticket VALUES (4, 'Logiciel 4', 'Contenu du ticket 4', 4, '25-apr-2023', 'Traité');
 INSERT INTO Ticket VALUES (5, 'Ticket 5', 'Contenu du ticket 5', 5, '30-may-2023', 'Traité');
 INSERT INTO Ticket VALUES (6, 'Ticket 6', 'Contenu du ticket 6', 6, '05-jun-2023', 'Traité');
-INSERT INTO Ticket VALUES (7, 'Ticket 7', 'Contenu du ticket 7', 7, '10-jul-2023', 'Traité');
+INSERT INTO Ticket VALUES (7, 'Logiciel 2', 'Contenu du ticket 7', 7, '10-jul-2023', 'Traité');
 INSERT INTO Ticket VALUES (8, 'Ticket 8', 'Contenu du ticket 8', 8, '15-aug-2023', 'En attente');
-INSERT INTO Ticket VALUES (9, 'Ticket 9', 'Contenu du ticket 9', 9, '20-sep-2023', 'Traité');
+INSERT INTO Ticket VALUES (9, 'logiciel 5', 'Contenu du ticket 9', 9, '20-sep-2023', 'Traité');
 INSERT INTO Ticket VALUES (10, 'Ticket 10', 'Contenu du ticket 10', 10, '25-oct-2023', 'Traité');
-INSERT INTO Ticket VALUES (11, 'Ticket 11', 'Contenu du ticket 11', 11, '30-nov-2023', 'Traité');
-INSERT INTO Ticket VALUES (12, 'Ticket 12', 'Contenu du ticket 12', 12, '05-dec-2023', 'Traité');
+INSERT INTO Ticket VALUES (11, 'Ticket 11', 'Logiciel 6 ticket 11', 11, '30-nov-2023', 'Traité');
+INSERT INTO Ticket VALUES (12, 'Ticket 12', 'Les problème du logiciel 1 est...', 12, '05-dec-2023', 'Traité');
 INSERT INTO Ticket VALUES (13, 'Ticket 13', 'Contenu du ticket 13', 13, '10-jan-2024', 'Traité');
 INSERT INTO Ticket VALUES (14, 'Ticket 14', 'Contenu du ticket 14', 14, '15-feb-2024', 'En attente');
 INSERT INTO Ticket VALUES (15, 'Ticket 15', 'Contenu du ticket 15', 15, '20-mar-2024', 'En attente');
@@ -221,7 +217,6 @@ INSERT INTO Ticket VALUES (27, 'Ticket 27', 'Contenu du ticket 27', 27, '20-mar-
 INSERT INTO Ticket VALUES (28, 'Ticket 28', 'Contenu du ticket 28', 28, '25-apr-2025', 'En attente');
 INSERT INTO Ticket VALUES (29, 'Ticket 29', 'Contenu du ticket 29', 29, '30-may-2025', 'En attente');
 INSERT INTO Ticket VALUES (30, 'Ticket 30', 'Contenu du ticket 30', 30, '05-jun-2025', 'En attente');
-select * from Ticket;
 
 -- Insert Licence
 INSERT INTO Licence VALUES (1, 'Un mois', 10, 'Licence 1');
@@ -230,8 +225,6 @@ INSERT INTO Licence VALUES (3, 'Un mois', 19.90, 'Licence 3');
 INSERT INTO Licence VALUES (4, 'Un an', 150, 'Licence 4');
 INSERT INTO Licence VALUES (5, 'Un mois', 49.90, 'Licence 5');
 INSERT INTO Licence VALUES (6, 'Un an', 200, 'Licence 6');
-select * from Licence;
-
 
 -- Insert AchatUtilisateur
 INSERT INTO AchatUtilisateur VALUES (1, 1, '10-feb-2023');
@@ -275,9 +268,6 @@ INSERT INTO AchatUtilisateur VALUES (19, 1, '10-oct-2024');
 INSERT INTO AchatUtilisateur VALUES (20, 2, '15-oct-2024');
 INSERT INTO AchatUtilisateur VALUES (19, 1, '10-nov-2024');
 INSERT INTO AchatUtilisateur VALUES (21, 4, '20-nov-2024');
-select * from AchatUtilisateur
-    order by date_achat;
-
 
 -- Insert AchatGroupe
 INSERT INTO AchatGroupe VALUES (1, 4, '10-jan-2023');
@@ -310,8 +300,6 @@ INSERT INTO AchatGroupe VALUES (7, 4, '10-jul-2025');
 INSERT INTO AchatGroupe VALUES (8, 2, '15-aug-2025');
 INSERT INTO AchatGroupe VALUES (9, 2, '20-sep-2025');
 INSERT INTO AchatGroupe VALUES (10, 6, '25-oct-2025');
-select * from AchatGroupe;
-
 
 -- Insert Employé
 INSERT INTO Employé VALUES (1, 'Johnson', 'David', 'david.johnson@saas.com', 28, '0611004081', '10 Downing Street, London', 'Chef', '60000.00', '01-mar-2022');
@@ -322,15 +310,13 @@ INSERT INTO Employé VALUES (5, 'Daniel', 'Jack', 'jack.daniel@saas.com', 34, '0
 INSERT INTO Employé VALUES (6, 'Smith', 'Jennifer', 'jennifer.smith@saas.com', 30, '0684024055', '123 Avenue des Champs-Élysées, Paris', 'Développeur', '55000.00', '05-may-2023');
 INSERT INTO Employé VALUES (7, 'Taylor', 'Andrew', 'andrew.taylor@saas.com', 29, '0678451236', '456 Broadway, New York', 'Développeur', '45000.00', '09-may-2023');
 INSERT INTO Employé VALUES (8, 'Anderson', 'Jessica', 'jessica.anderson@saas.com', 31, '0647144946', '987 Birch Street, London', 'Commercial', '55000.00', '01-jun-2023');
-INSERT INTO Employé VALUES (9, 'Thomas', 'Matthew', 'matthew.thomas@saas.com', 31, '0686048521', '987 Wall Street, New York', 'Commercial', '45000.00', '25-jul-2023');
+INSERT INTO Employé VALUES (9, 'Thomas', 'Matthew', 'matthew.thomas@saas.com', 31, '0686048521', '987 Wall Street, New York', 'Support', '38000.00', '25-jul-2023');
 INSERT INTO Employé VALUES (10, 'Harris', 'Sophia', 'sophia.harris@saas.com', 33, '0647146248', '456 Chestnut Street, Berlin', 'Développeur', '55000.00', '14-sep-2023');
 INSERT INTO Employé VALUES (11, 'Clark', 'Daniel', 'daniel.clark@saas.com', 28, '0651205400', '321 Park Avenue, New York', 'Commercial', '45000.00', '26-nov-2023');
-INSERT INTO Employé VALUES (12, 'Lewis', 'Olivia', 'olivia.lewis@saas.com', 25, '0745456013', '852 Rodeo Drive, Los Angeles', 'Développeur', '55000.00', '30-nov-2023');
+INSERT INTO Employé VALUES (12, 'Lewis', 'Olivia', 'olivia.lewis@saas.com', 25, '0745456013', '852 Rodeo Drive, Los Angeles', 'Support', '35000.00', '30-nov-2023');
 INSERT INTO Employé VALUES (13, 'Walker', 'James', 'james.walker@saas.com', 29, '0687451236', '963 Sunset Boulevard, Los Angeles', 'Commercial', '45000.00', '12-may-2024');
-INSERT INTO Employé VALUES (14, 'Brant', 'Ava', 'ava.brant@saas.com', 26, '0654789321', '741 Vine Street, Los Angeles', 'Développeur', '55000.00', '27-jul-2024');
+INSERT INTO Employé VALUES (14, 'Brant', 'Ava', 'ava.brant@saas.com', 26, '0654789321', '741 Vine Street, Los Angeles', 'Support', '35000.00', '27-jul-2024');
 INSERT INTO Employé VALUES (15, 'Young', 'William', 'william.young@saas.com', 30, '0654024060', '369 Hollywood Boulevard, Los Angeles', 'Commercial', '45000.00', '11-oct-2024');
-select * from Employé;
-
 
 -- Insert Modifie
 INSERT INTO Modifie VALUES (1, 1, '10-mar-2022', '0.1');
@@ -372,8 +358,6 @@ INSERT INTO Modifie VALUES (7, 2, '20-jun-2025', '1.3');
 INSERT INTO Modifie VALUES (6, 5, '25-jul-2025', '0.4');
 INSERT INTO Modifie VALUES (3, 1, '30-aug-2025', '1.5');
 INSERT INTO Modifie VALUES (7, 4, '05-sep-2025', '1.0');
-select * from Modifie;
-
 
 -- Insert Gère
 INSERT INTO Gère VALUES (1, 1, '20-jun-2022');
@@ -407,8 +391,6 @@ INSERT INTO Gère VALUES (2, 5, '25-jan-2025');
 INSERT INTO Gère VALUES (5, 1, '28-feb-2025');
 INSERT INTO Gère VALUES (8, 6, '05-mar-2025');
 INSERT INTO Gère VALUES (5, 2, '10-apr-2025');
-select * from Gère;
-
     
 -- Insert Appartient
 INSERT INTO Appartient VALUES (1, 1);
@@ -447,8 +429,6 @@ INSERT INTO Appartient VALUES (9, 29);
 INSERT INTO Appartient VALUES (9, 30);
 INSERT INTO Appartient VALUES (9, 28);
 INSERT INTO Appartient VALUES (10, 30);
-select * from Appartient;
-
 
 -- Insert Inclue
 INSERT INTO Inclue VALUES (1, 1);
@@ -473,6 +453,134 @@ INSERT INTO Inclue VALUES (6, 2);
 INSERT INTO Inclue VALUES (6, 3);
 INSERT INTO Inclue VALUES (6, 4);
 INSERT INTO Inclue VALUES (6, 5);
+
+
+
+
+
+-- Quels sont tous les utilisateurs ?
+select * from Utilisateur;
+-- Quels sont tous les groupes ?
+select * from Groupe;
+-- Quels sont tous les logiciels ?
+select * from Logiciel;
+-- Quels sont tous les ticlets ?
+select * from Ticket;
+-- Quelles sont toutes les licences
+select * from Licence;
+-- Quels sont tous les achats réalisés par des utilisateurs triés par date d'achat ?
+select * from AchatUtilisateur
+    order by date_achat;
+-- Quels sont tous les achats réalisés par des groupes ?
+select * from AchatGroupe;
+-- Quels sont tous les employés ?
+select * from Employé;
+-- Quelles sont toutes les modifications faites aux logiciels ?
+select * from Modifie;
+-- Quelles sont toutes les modifications faites aux licences ?
+select * from Gère;
+-- Quel utilisateur appartient à quel groupe ?
+select * from Appartient;
+-- Quels logiciels sont inclus dans quelles licences ?
 select * from Inclue;
 
+--Quels groupes et combien ont-ils acheté de licences ?
+select distinct g.Nom, count(ag.id_groupe) as "Nombre de licences achetées"
+from Groupe g, AchatGroupe ag
+where g.id_groupe = ag.id_groupe
+group by g.Nom;
 
+--Combien de licences ont acheté en moyenne les groupes ?
+select avg(nb_licences) as "Nombre de licences achetées en moyenne par groupe"
+from (select count(ag.id_groupe) as nb_licences
+    from Groupe g, AchatGroupe ag
+    where g.id_groupe = ag.id_groupe
+    group by g.Nom);
+
+--Combien d'employés sont Développeurs ? Support ? Commercial ?
+select count(*) as "Nombre d'employés Développeurs"
+from Employé
+where Poste = 'Développeur';
+select count(*) as "Nombre d'employés Support"
+from Employé
+where Poste = 'Support';
+select count(*) as "Nombre d'employés Commercial"
+from Employé
+where Poste = 'Commercial';
+
+--Combien d'employés dans la SAAS ?
+select count(*) as "Nombre d'employés dans la SAAS"
+from Employé;
+
+--Quelle est la moyenne des salaires des développeurs ? du support ? des commerciaux ? de tous ?
+select avg(Salaire) as "Salaire moyen des Développeurs"
+from Employé
+where Poste = 'Développeur';
+select avg(Salaire) as "Salaire moyen du Support"
+from Employé
+where Poste = 'Support';
+select avg(Salaire) as "Salaire moyen des Commerciaux"
+from Employé
+where Poste = 'Commercial';
+select avg(Salaire) as "Salaire moyen de tous les employés"
+from Employé;
+
+--Combien de tickets ont été traités ? Combien sont en attente ?
+select count(*) as "Nombre de tickets traités"
+from Ticket
+where Statut = 'Traité';
+select count(*) as "Nombre de tickets en attente"
+from Ticket
+where Statut = 'En attente';
+
+--Quels sont les utilisateurs qui sont aussi employés ? (même email)
+select u.Nom, u.Prenom, u.Email
+from Utilisateur u, Employé e
+where u.Email = e.Email;
+
+--Combien de ventes a fait le SAAS ? Combien d’argent ?
+select count(*) as "Nombre de ventes"
+from AchatUtilisateur;
+select sum(Prix) as "Argent gagné"
+from AchatUtilisateur au, Licence l
+where au.id_licence = l.id_licence;
+
+--Quelle est la licence la plus vendue ?
+select l.id_licence, count(au.id_licence) as "Nombre de ventes"
+from AchatUtilisateur au, Licence l
+where au.id_licence = l.id_licence
+group by l.id_licence
+order by count(au.id_licence) desc;
+
+--Quels utilisateurs ont acheté plusieurs fois des licences ?
+select u.Nom, u.Prenom, u.Email, count(au.id_licence) as "Nombre de licences"
+from Utilisateur u, AchatUtilisateur au
+where u.id_utilisateur = au.id_utilisateur
+group by u.Nom, u.Prenom, u.Email
+having count(au.id_licence) > 1;
+
+--Quels sont les utilisateurs qui ont plusieurs licences ? (donc personnelle et de groupe) - WIP
+select distinct u.Nom, u.Prenom, u.Email, l.id_licence as "Licence personnelle", l2.id_licence as "Licence du groupe", g.Nom
+from Utilisateur u, AchatUtilisateur au, Licence l, AchatGroupe ag, Licence l2, Groupe g
+where u.id_utilisateur = au.id_utilisateur
+and au.id_licence = l.id_licence
+and u.id_utilisateur = ag.id_groupe
+and ag.id_licence = l2.id_licence
+and l.id_licence != l2.id_licence
+order by u.Email;
+
+--Quels utilisateurs ont le logiciel donné (4) ?
+select distinct u.Nom, u.Prenom, u.Email
+from Utilisateur u, AchatUtilisateur au, Licence l, Inclue i
+where u.id_utilisateur = au.id_utilisateur
+and au.id_licence = l.id_licence
+and l.id_licence = i.id_licence
+and i.id_logiciel = 4;
+
+--Quels logiciels ont été modifiés le plus suite à des Ticket ? - WIP
+SELECT l.Nom AS "Nom du logiciel", COUNT(*) AS "Nombre de modifications"
+FROM Ticket t, Modifie m
+JOIN Logiciel l ON m.id_logiciel = l.id_logiciel
+WHERE t.Objet LIKE CONCAT('%', l.Nom, '%') OR t.Contenu LIKE CONCAT('%', l.Nom, '%')
+GROUP BY l.Nom
+ORDER BY COUNT(*) DESC;
