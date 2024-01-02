@@ -644,7 +644,7 @@ GROUP BY G.id_groupe, G.Nom;
 SELECT * FROM StatistiquesGroupe;
 
 -- Vue 8 : SalaireMoyenParPoste récupère la moyenne des salaires des employés selon leur poste.
-CREATE VIEW SalaireMoyenParPoste AS
+CREATE OR REPLACE VIEW SalaireMoyenParPoste AS
 SELECT Poste, AVG(Salaire) AS Salaire_Moyen
 FROM Employé
 GROUP BY Poste;
@@ -777,8 +777,8 @@ BEGIN
     FROM AchatUtilisateur au, Licence l
     WHERE au.id_utilisateur = :NEW.id_utilisateur
     AND au.id_licence = l.id_licence
-    AND l.Duree = "Un mois";
-    IF nb_achats = 12 THEN
+    AND l.Durée = 'Un mois';
+    IF MOD(nb_achats, 12) = 0 THEN
         :NEW.Date_achat := :NEW.Date_achat + 30;
     END IF;
 END;
