@@ -19,6 +19,8 @@ Diff Licence Entreprise / Particulier
 Déplacement de toutes les requêtes existantes à la fin.
 Ajout de toutes les requêtes indiquées dans le doc. (il y en a 2 qui ne marchent pas encore WIP)
 
+Création des Vues et Triggers [non testé]
+
 ---------------------------------
 
 - Ajout de La date pour clé primaire dans achat_utilisateur, achat_groupe et Gère
