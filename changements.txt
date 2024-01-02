@@ -3,6 +3,8 @@ permissions:
 
     Un utilisateur a accès aux tables Ticket, Licence et Groupe. Il a la permission de modifier groupe et de voir Licence et Ticket. 
 
+    Un membre du support a accès aux tables Ticket, Licence. Il a la permission de modifier Ticket.
+
 triggers todo:
     Un utilisateur n’a pas le droit d’acheter deux fois la même licence alors que son abonnement n’est pas expiré.
     Il peut cependant acheter une licence plus chère, dans ce cas il paiera le prix de la nouvelle licence moins le prix de sa licence actuelle 
