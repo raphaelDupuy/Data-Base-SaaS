@@ -1,3 +1,21 @@
+permissions:
+    Un groupe a accès aux tables Licence et Utilisateur. Il a juste la permission de les voir. 
+
+    Un utilisateur a accès aux tables Ticket, Licence et Groupe. Il a la permission de modifier groupe et de voir Licence et Ticket. 
+
+triggers todo:
+    Un utilisateur n’a pas le droit d’acheter deux fois la même licence alors que son abonnement n’est pas expiré.
+    Il peut cependant acheter une licence plus chère, dans ce cas il paiera le prix de la nouvelle licence moins le prix de sa licence actuelle 
+    S’il achète une licence moins chère, il n’a pas de réduction
+
+    Si l’utilisateur a acheté 12 fois d’affilé la même licence d’une durée de 1 mois, il reçoit gratuitement 1 mois gratuit de cette licence. 
+
+    Si tous les membres d’un groupe le quittent, le groupe est supprimé.
+
+Diff Licence Entreprise / Particulier
+
+---------------------------------
+
 Déplacement de toutes les requêtes existantes à la fin.
 Ajout de toutes les requêtes indiquées dans le doc. (il y en a 2 qui ne marchent pas encore WIP)
 
