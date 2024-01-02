@@ -12,7 +12,13 @@ triggers todo:
 
     Si tous les membres d’un groupe le quittent, le groupe est supprimé.
 
+    Enum poste employé / etat ticket: certaines valeurs
+
 Diff Licence Entreprise / Particulier
+
+-- Quelle est la licence la plus vendue ? -> pas le max mais la liste entière
+-- Quels logiciels ont été modifiés le plus suite à des Tickets ? - modifier ticket: rajouter la licence sur laquelle l'objet porte, (e.g. en début d'objet)
+
 
 ---------------------------------
 
