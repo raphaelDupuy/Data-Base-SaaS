@@ -45,6 +45,7 @@ CREATE TABLE Ticket (
     id_ticket NUMBER(10) NOT NULL,
     Objet VARCHAR2(50) NOT NULL,
     Contenu VARCHAR2(255),
+    Logiciel_concerné VARCHAR2(30) NOT NULL,
     id_utilisateur NUMBER,
     Date_envoi DATE,
     Statut VARCHAR2(10),
@@ -191,36 +192,36 @@ INSERT INTO Logiciel VALUES (5, 'Logiciel 5', 'Logiciel de test 5');
 INSERT INTO Logiciel VALUES (6, 'Logiciel 6', 'Logiciel de test 6');
 
 -- Insert Ticket
-INSERT INTO Ticket VALUES (1, 'Bug bizarre', 'Il y a un bug quand on charge le fichier excel dans le Logiciel 1', 1, '10-jan-2023', 'Traité');
-INSERT INTO Ticket VALUES (2, 'Ticket 2', 'Logiciel 2', 2, '15-feb-2023', 'Traité');
-INSERT INTO Ticket VALUES (3, 'Ticket 3', 'Contenu du ticket 3, blabla Logiciel 2', 3, '20-mar-2023', 'Traité');
-INSERT INTO Ticket VALUES (4, 'Logiciel 4', 'Contenu du ticket 4', 4, '25-apr-2023', 'Traité');
-INSERT INTO Ticket VALUES (5, 'Ticket 5', 'Contenu du ticket 5', 5, '30-may-2023', 'Traité');
-INSERT INTO Ticket VALUES (6, 'Ticket 6', 'Contenu du ticket 6', 6, '05-jun-2023', 'Traité');
-INSERT INTO Ticket VALUES (7, 'Logiciel 2', 'Contenu du ticket 7', 7, '10-jul-2023', 'Traité');
-INSERT INTO Ticket VALUES (8, 'Ticket 8', 'Contenu du ticket 8', 8, '15-aug-2023', 'En attente');
-INSERT INTO Ticket VALUES (9, 'logiciel 5', 'Contenu du ticket 9', 9, '20-sep-2023', 'Traité');
-INSERT INTO Ticket VALUES (10, 'Ticket 10', 'Contenu du ticket 10', 10, '25-oct-2023', 'Traité');
-INSERT INTO Ticket VALUES (11, 'Ticket 11', 'Logiciel 6 ticket 11', 11, '30-nov-2023', 'Traité');
-INSERT INTO Ticket VALUES (12, 'Ticket 12', 'Les problème du logiciel 1 est...', 12, '05-dec-2023', 'Traité');
-INSERT INTO Ticket VALUES (13, 'Ticket 13', 'Contenu du ticket 13', 13, '10-jan-2024', 'Traité');
-INSERT INTO Ticket VALUES (14, 'Ticket 14', 'Contenu du ticket 14', 14, '15-feb-2024', 'En attente');
-INSERT INTO Ticket VALUES (15, 'Ticket 15', 'Contenu du ticket 15', 15, '20-mar-2024', 'En attente');
-INSERT INTO Ticket VALUES (16, 'Ticket 16', 'Contenu du ticket 16', 16, '25-apr-2024', 'Traité');
-INSERT INTO Ticket VALUES (17, 'Ticket 17', 'Contenu du ticket 17', 17, '30-may-2024', 'En attente');
-INSERT INTO Ticket VALUES (18, 'Ticket 18', 'Contenu du ticket 18', 18, '05-jun-2024', 'Traité');
-INSERT INTO Ticket VALUES (19, 'Ticket 19', 'Contenu du ticket 19', 19, '10-jul-2024', 'Traité');
-INSERT INTO Ticket VALUES (20, 'Ticket 20', 'Contenu du ticket 20', 20, '15-aug-2024', 'En attente');
-INSERT INTO Ticket VALUES (21, 'Ticket 21', 'Contenu du ticket 21', 21, '20-sep-2024', 'En attente');
-INSERT INTO Ticket VALUES (22, 'Ticket 22', 'Contenu du ticket 22', 22, '25-oct-2024', 'En attente');
-INSERT INTO Ticket VALUES (23, 'Ticket 23', 'Contenu du ticket 23', 23, '30-nov-2024', 'En attente');
-INSERT INTO Ticket VALUES (24, 'Ticket 24', 'Contenu du ticket 24', 24, '05-dec-2024', 'En attente');
-INSERT INTO Ticket VALUES (25, 'Ticket 25', 'Contenu du ticket 25', 25, '10-jan-2025', 'Traité');
-INSERT INTO Ticket VALUES (26, 'Ticket 26', 'Contenu du ticket 26', 26, '15-feb-2025', 'En attente');
-INSERT INTO Ticket VALUES (27, 'Ticket 27', 'Contenu du ticket 27', 27, '20-mar-2025', 'En attente');
-INSERT INTO Ticket VALUES (28, 'Ticket 28', 'Contenu du ticket 28', 28, '25-apr-2025', 'En attente');
-INSERT INTO Ticket VALUES (29, 'Ticket 29', 'Contenu du ticket 29', 29, '30-may-2025', 'En attente');
-INSERT INTO Ticket VALUES (30, 'Ticket 30', 'Contenu du ticket 30', 30, '05-jun-2025', 'En attente');
+INSERT INTO Ticket VALUES (1, 'Bug bizarre', 'Il y a un bug quand on charge le fichier excel dans le Logiciel 1', 'Logiciel 1', 1, '10-jan-2023', 'Traité');
+INSERT INTO Ticket VALUES (2, 'Ticket 2', 'Logiciel 2', 'Logiciel 2', 2, '15-feb-2023', 'Traité');
+INSERT INTO Ticket VALUES (3, 'Ticket 3', 'Contenu du ticket 3, blabla Logiciel 2', 'Logiciel 2', 3, '20-mar-2023', 'Traité');
+INSERT INTO Ticket VALUES (4, 'Logiciel 4', 'Contenu du ticket 4', 'Logiciel 4', 4, '25-apr-2023', 'Traité');
+INSERT INTO Ticket VALUES (5, 'Ticket 5', 'Contenu du ticket 5', 'Logiciel 2', 5, '30-may-2023', 'Traité');
+INSERT INTO Ticket VALUES (6, 'Ticket 6', 'Contenu du ticket 6', 'Logiciel 1', 6, '05-jun-2023', 'Traité');
+INSERT INTO Ticket VALUES (7, 'Logiciel 2', 'Contenu du ticket 7', 'Logiciel 2', 7, '10-jul-2023', 'Traité');
+INSERT INTO Ticket VALUES (8, 'Ticket 8', 'Contenu du ticket 8', 'Logiciel 3', 8, '15-aug-2023', 'En attente');
+INSERT INTO Ticket VALUES (9, 'logiciel 5', 'Contenu du ticket 9', 'Logiciel 5', 9, '20-sep-2023', 'Traité');
+INSERT INTO Ticket VALUES (10, 'Ticket 10', 'Contenu du ticket 10', 'Logiciel 2', 10, '25-oct-2023', 'Traité');
+INSERT INTO Ticket VALUES (11, 'Ticket 11', 'Logiciel 6 ticket 11', 'Logiciel 4', 11, '30-nov-2023', 'Traité');
+INSERT INTO Ticket VALUES (12, 'Ticket 12', 'Les problème du logiciel 1 est...', 'Logiciel 1', 12, '05-dec-2023', 'Traité');
+INSERT INTO Ticket VALUES (13, 'Ticket Logiciel 3', 'Contenu du ticket Logiciel 2 (erreur volontaire)', 'Logiciel 3', 13, '10-jan-2024', 'Traité');
+INSERT INTO Ticket VALUES (14, 'Ticket 14', 'Contenu du ticket 14', 'Logiciel 2', 14, '15-feb-2024', 'En attente');
+INSERT INTO Ticket VALUES (15, 'Ticket 15', 'Contenu du ticket 15', 'Logiciel 5', 15, '20-mar-2024', 'En attente');
+INSERT INTO Ticket VALUES (16, 'Ticket 16', 'Contenu du ticket 16', 'Logiciel 4', 16, '25-apr-2024', 'Traité');
+INSERT INTO Ticket VALUES (17, 'Ticket 17', 'Contenu du ticket 17', 'Logiciel 3', 17, '30-may-2024', 'En attente');
+INSERT INTO Ticket VALUES (18, 'Ticket 18', 'Contenu du ticket 18', 'Logiciel 2', 18, '05-jun-2024', 'Traité');
+INSERT INTO Ticket VALUES (19, 'Ticket 19', 'Contenu du ticket 19', 'Logiciel 1', 19, '10-jul-2024', 'Traité');
+INSERT INTO Ticket VALUES (20, 'Ticket 20', 'Contenu du ticket 20', 'Logiciel 1', 20, '15-aug-2024', 'En attente');
+INSERT INTO Ticket VALUES (21, 'Ticket 21', 'Contenu du ticket 21', 'Logiciel 6', 21, '20-sep-2024', 'En attente');
+INSERT INTO Ticket VALUES (22, 'Ticket 22', 'Contenu du ticket 22', 'Logiciel 5', 22, '25-oct-2024', 'En attente');
+INSERT INTO Ticket VALUES (23, 'Ticket 23', 'Contenu du ticket 23', 'Logiciel 4', 23, '30-nov-2024', 'En attente');
+INSERT INTO Ticket VALUES (24, 'Ticket 24', 'Contenu du ticket 24', 'Logiciel 2', 24, '05-dec-2024', 'En attente');
+INSERT INTO Ticket VALUES (25, 'Ticket 25', 'Contenu du ticket 25', 'Logiciel 3', 25, '10-jan-2025', 'Traité');
+INSERT INTO Ticket VALUES (26, 'Ticket 26', 'Contenu du ticket 26', 'Logiciel 1', 26, '15-feb-2025', 'En attente');
+INSERT INTO Ticket VALUES (27, 'Ticket 27', 'Contenu du ticket 27', 'Logiciel 2', 27, '20-mar-2025', 'En attente');
+INSERT INTO Ticket VALUES (28, 'Ticket 28', 'Contenu du ticket 28', 'Logiciel 5', 28, '25-apr-2025', 'En attente');
+INSERT INTO Ticket VALUES (29, 'Ticket 29', 'Contenu du ticket 29', 'Logiciel 6', 29, '30-may-2025', 'En attente');
+INSERT INTO Ticket VALUES (30, 'Ticket 30', 'Contenu du ticket 30', 'Logiciel 3', 30, '05-jun-2025', 'En attente');
 
 -- Insert Licence
 INSERT INTO Licence VALUES (1, 'Un mois', 10, 'Licence 1');
@@ -580,12 +581,12 @@ and l.id_licence = i.id_licence
 and i.id_logiciel = 4;
 
 -- Quels logiciels ont été modifiés le plus suite à des Ticket ? - WIP
-SELECT l.Nom AS "Nom du logiciel", COUNT(*) AS "Nombre de modifications"
-FROM Ticket t, Modifie m
-JOIN Logiciel l ON m.id_logiciel = l.id_logiciel
-WHERE t.Objet LIKE CONCAT('%', l.Nom, '%') OR t.Contenu LIKE CONCAT('%', l.Nom, '%')
-GROUP BY l.Nom
-ORDER BY COUNT(*) DESC;
+-- SELECT l.Nom AS "Nom du logiciel", COUNT(*) AS "Nombre de modifications"
+-- FROM Ticket t, Modifie m
+-- JOIN Logiciel l ON m.id_logiciel = l.id_logiciel
+-- WHERE t.Objet LIKE CONCAT('%', l.Nom, '%') OR t.Contenu LIKE CONCAT('%', l.Nom, '%')
+-- GROUP BY l.Nom
+-- ORDER BY COUNT(*) DESC;
 
 -- D/ Vues
 
@@ -649,15 +650,15 @@ FROM Employé
 GROUP BY Poste;
 SELECT * FROM SalaireMoyenParPoste;
 
-GRANT SELECT ON UtilisateurAchatLicence TO Employé WHERE Poste = 'Commercial';
-GRANT SELECT ON GroupeAchatLicence TO Employé WHERE Poste = 'Commercial';
-GRANT SELECT ON EmployeModifieLogiciel TO Employé WHERE Poste = 'Développeur';
-GRANT SELECT ON EmployeGereLicence TO Employé WHERE Poste = 'Commercial';
--- Donner l'accès aux membres du groupe ? Si oui, comment ?
-GRANT SELECT ON NombreUtilisateursParGroupe TO Employé WHERE Poste = 'Commercial';
-GRANT SELECT ON StatistiquesUtilisateur TO Employé WHERE Poste = 'Commercial';
-GRANT SELECT ON StatistiquesGroupe TO Employé WHERE Poste = 'Commercial';
-GRANT SELECT ON SalaireMoyenParPoste TO Employé WHERE Poste = 'Chef';
+-- GRANT SELECT ON UtilisateurAchatLicence TO Employé WHERE Poste = 'Commercial';
+-- GRANT SELECT ON GroupeAchatLicence TO Employé WHERE Poste = 'Commercial';
+-- GRANT SELECT ON EmployeModifieLogiciel TO Employé WHERE Poste = 'Développeur';
+-- GRANT SELECT ON EmployeGereLicence TO Employé WHERE Poste = 'Commercial';
+-- -- Donner l'accès aux membres du groupe ? Si oui, comment ?
+-- GRANT SELECT ON NombreUtilisateursParGroupe TO Employé WHERE Poste = 'Commercial';
+-- GRANT SELECT ON StatistiquesUtilisateur TO Employé WHERE Poste = 'Commercial';
+-- GRANT SELECT ON StatistiquesGroupe TO Employé WHERE Poste = 'Commercial';
+-- GRANT SELECT ON SalaireMoyenParPoste TO Employé WHERE Poste = 'Chef';
 
 -- E/ Intégrité des données : les triggers
 
@@ -677,49 +678,49 @@ BEGIN
     END IF;
 END;
 
--- Trigger 2 : Un utilisateur peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
-CREATE OR REPLACE TRIGGER AchatLicenceUtilisateurUpgrade
-BEFORE INSERT ON AchatUtilisateur
-FOR EACH ROW
-DECLARE
-    prix_licence_actuelle NUMBER;
-    nb_jours_utilises NUMBER;
-    duree_licence NUMBER;
-BEGIN
-    SELECT Prix INTO prix_licence_actuelle
-    FROM AchatUtilisateur au, Licence l
-    WHERE au.id_utilisateur = :NEW.id_utilisateur
-    AND au.id_licence = l.id_licence;
+-- -- Trigger 2 : Un utilisateur peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
+-- CREATE OR REPLACE TRIGGER AchatLicenceUtilisateurUpgrade
+-- BEFORE INSERT ON AchatUtilisateur
+-- FOR EACH ROW
+-- DECLARE
+--     prix_licence_actuelle NUMBER;
+--     nb_jours_utilises NUMBER;
+--     duree_licence NUMBER;
+-- BEGIN
+--     SELECT Prix INTO prix_licence_actuelle
+--     FROM AchatUtilisateur au, Licence l
+--     WHERE au.id_utilisateur = :NEW.id_utilisateur
+--     AND au.id_licence = l.id_licence;
     
-    SELECT Duree INTO duree_licence
-    FROM Licence
-    WHERE id_licence = :NEW.id_licence;
+--     SELECT Duree INTO duree_licence
+--     FROM Licence
+--     WHERE id_licence = :NEW.id_licence;
     
-    SELECT COUNT(*) INTO nb_jours_utilises
-    FROM AchatUtilisateur
-    WHERE id_utilisateur = :NEW.id_utilisateur
-    AND id_licence = :NEW.id_licence;
+--     SELECT COUNT(*) INTO nb_jours_utilises
+--     FROM AchatUtilisateur
+--     WHERE id_utilisateur = :NEW.id_utilisateur
+--     AND id_licence = :NEW.id_licence;
     
-    IF prix_licence_actuelle > :NEW.Prix THEN
-        :NEW.Prix := :NEW.Prix - (prix_licence_actuelle / duree_licence * nb_jours_utilises);
-    END IF;
-END;
+--     IF prix_licence_actuelle > :NEW.Prix THEN
+--         :NEW.Prix := :NEW.Prix - (prix_licence_actuelle / duree_licence * nb_jours_utilises);
+--     END IF;
+-- END;
 
--- Trigger 3 : Un groupe est supprimé si tous les membres ont quitté le groupe.
-CREATE OR REPLACE TRIGGER SuppressionGroupe
-AFTER DELETE ON Appartient
-FOR EACH ROW
-DECLARE
-    nb_membres INTEGER;
-BEGIN
-    SELECT COUNT(*) INTO nb_membres
-    FROM Appartient
-    WHERE id_groupe = :OLD.id_groupe;
-    IF nb_membres = 0 THEN
-        DELETE FROM Groupe
-        WHERE id_groupe = :OLD.id_groupe;
-    END IF;
-END;
+-- -- Trigger 3 : Un groupe est supprimé si tous les membres ont quitté le groupe.
+-- CREATE OR REPLACE TRIGGER SuppressionGroupe
+-- AFTER DELETE ON Appartient
+-- FOR EACH ROW
+-- DECLARE
+--     nb_membres INTEGER;
+-- BEGIN
+--     SELECT COUNT(*) INTO nb_membres
+--     FROM Appartient
+--     WHERE id_groupe = :OLD.id_groupe;
+--     IF nb_membres = 0 THEN
+--         DELETE FROM Groupe
+--         WHERE id_groupe = :OLD.id_groupe;
+--     END IF;
+-- END;
 
 -- Trigger 4 : Un groupe ne peut pas acheter une licence si il a déjà acheté la même licence.
 CREATE OR REPLACE TRIGGER AchatLicenceGroupeDoublon
@@ -737,33 +738,33 @@ BEGIN
     END IF;
 END;
 
--- Trigger 5 : Un groupe peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
-CREATE OR REPLACE TRIGGER AchatLicenceGroupeUpgrade
-BEFORE INSERT ON AchatGroupe
-FOR EACH ROW
-DECLARE
-    prix_licence_actuelle NUMBER;
-    nb_jours_utilises NUMBER;
-    duree_licence NUMBER;
-BEGIN
-    SELECT Prix INTO prix_licence_actuelle
-    FROM AchatGroupe ag, Licence l
-    WHERE ag.id_groupe = :NEW.id_groupe
-    AND ag.id_licence = l.id_licence;
+-- -- Trigger 5 : Un groupe peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
+-- CREATE OR REPLACE TRIGGER AchatLicenceGroupeUpgrade
+-- BEFORE INSERT ON AchatGroupe
+-- FOR EACH ROW
+-- DECLARE
+--     prix_licence_actuelle NUMBER;
+--     nb_jours_utilises NUMBER;
+--     duree_licence NUMBER;
+-- BEGIN
+--     SELECT Prix INTO prix_licence_actuelle
+--     FROM AchatGroupe ag, Licence l
+--     WHERE ag.id_groupe = :NEW.id_groupe
+--     AND ag.id_licence = l.id_licence;
     
-    SELECT Duree INTO duree_licence
-    FROM Licence
-    WHERE id_licence = :NEW.id_licence;
+--     SELECT Duree INTO duree_licence
+--     FROM Licence
+--     WHERE id_licence = :NEW.id_licence;
     
-    SELECT COUNT(*) INTO nb_jours_utilises
-    FROM AchatGroupe
-    WHERE id_groupe = :NEW.id_groupe
-    AND id_licence = :NEW.id_licence;
+--     SELECT COUNT(*) INTO nb_jours_utilises
+--     FROM AchatGroupe
+--     WHERE id_groupe = :NEW.id_groupe
+--     AND id_licence = :NEW.id_licence;
     
-    IF prix_licence_actuelle > :NEW.Prix THEN
-        :NEW.Prix := :NEW.Prix - (prix_licence_actuelle / duree_licence * nb_jours_utilises);
-    END IF;
-END;
+--     IF prix_licence_actuelle > :NEW.Prix THEN
+--         :NEW.Prix := :NEW.Prix - (prix_licence_actuelle / duree_licence * nb_jours_utilises);
+--     END IF;
+-- END;
 
 -- Trigger 6 : Un utilisateur qui a acheté la même licence mensuelle 12 fois obtient 1 mois gratuit.
 CREATE OR REPLACE TRIGGER ReductionLicenceMensuelle
