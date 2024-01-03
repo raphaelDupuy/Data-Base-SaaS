@@ -56,7 +56,7 @@ CREATE TABLE Ticket (
 
 CREATE TABLE Licence (
     id_licence NUMBER(10) NOT NULL,
-    Durée VARCHAR2(10),
+    Durée NUMBER(3),
     Prix NUMBER(6, 2) NOT NULL,
     Description VARCHAR2(255),
     PRIMARY KEY (id_licence)
@@ -65,6 +65,7 @@ CREATE TABLE Licence (
 CREATE TABLE AchatUtilisateur (
     id_utilisateur NOT NULL,
     id_licence NOT NULL,
+    prix NUMBER(6, 2) NOT NULL,
     Date_achat DATE NOT NULL,
     PRIMARY KEY (id_utilisateur, id_licence, Date_achat),
     FOREIGN KEY (id_utilisateur) REFERENCES Utilisateur(id_utilisateur),
@@ -75,6 +76,7 @@ CREATE TABLE AchatUtilisateur (
 CREATE TABLE AchatGroupe (
     id_groupe NOT NULL,
     id_licence NOT NULL,
+    prix NUMBER(6, 2) NOT NULL
     Date_achat DATE NOT NULL,
     PRIMARY KEY (id_groupe, id_licence, Date_achat),
     FOREIGN KEY (id_groupe) REFERENCES Groupe(id_groupe),
@@ -271,36 +273,42 @@ DECLARE
     jours_restants NUMBER;
     reduction NUMBER;
 BEGIN
-    -- Récupérer le prix de la licence actuelle du groupe
-    SELECT l.Prix 
+    -- Vérifier si une licence existe pour le groupe
+    SELECT COUNT(*)
     INTO prix_licence_actuelle
     FROM AchatGroupe ag
-    JOIN Licence l ON ag.id_licence = l.id_licence
-    WHERE ag.id_groupe = :NEW.id_groupe
-    AND ROWNUM = 1;  -- Pour s'assurer de ne récupérer qu'une seule ligne (la plus récente)
+    WHERE ag.id_groupe = :NEW.id_groupe;
+	DBMS_OUTPUT.PUT_LINE('Début');
 
-    -- Calculer les jours restants dans la période de la licence actuelle
-    SELECT (l.Durée - (SYSDATE - ag.date_achat)) 
-    INTO jours_restants
-    FROM AchatGroupe ag
-    JOIN Licence l ON ag.id_licence = l.id_licence
-    WHERE ag.id_groupe = :NEW.id_groupe
-    AND ROWNUM = 1;
+    -- Si une licence existe pour le groupe
+    IF prix_licence_actuelle > 0 THEN
+        -- Récupérer le prix de la licence actuelle du groupe
+        DBMS_OUTPUT.PUT_LINE('licence présente');
+        SELECT l.Prix 
+        INTO prix_licence_actuelle
+        FROM AchatGroupe ag
+        JOIN Licence l ON ag.id_licence = l.id_licence
+        WHERE ag.id_groupe = :NEW.id_groupe;
 
-    -- Calculer la réduction basée sur les jours restants
-    IF jours_restants > 0 THEN
-        reduction := prix_licence_actuelle / jours_restants;
 
-        -- Utilisation de l'instruction UPDATE pour modifier les données dans une autre table
-        UPDATE Licence
-        SET Prix = Prix - reduction
-        WHERE id_licence = :NEW.id_licence;
-    END IF;
-EXCEPTION
-     WHEN NO_DATA_FOUND THEN 
-     	INSERT INTO AchatGroupe (id_groupe, id_licence, date_achat)
-            VALUES (:NEW.id_groupe, :NEW.id_licence, SYSDATE);
+        -- Calculer les jours restants dans la période de la licence actuelle
+        SELECT (l.durée - (SYSDATE - ag.date_achat)) 
+        INTO jours_restants
+        FROM AchatGroupe ag
+        JOIN Licence l ON ag.id_licence = l.id_licence
+        WHERE ag.id_groupe = :NEW.id_groupe;
 
+        -- Calculer la réduction basée sur les jours restants
+        IF jours_restants > 0 THEN
+            DBMS_OUTPUT.PUT_LINE('Aucune licence présente');
+            reduction := prix_licence_actuelle / jours_restants;
+
+            -- Utilisation de l'instruction UPDATE pour modifier les données dans une autre table
+            UPDATE Licence
+            SET Prix = Prix - reduction
+            WHERE id_licence = :NEW.id_licence;
+        END IF;
+	END IF;
 END;
 
 
