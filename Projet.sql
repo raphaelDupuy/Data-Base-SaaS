@@ -223,24 +223,31 @@ BEGIN
     END IF;
 END;
 
--- Trigger 4 : Supperssion du groupe quand la dernière personne le quitte
-CREATE OR REPLACE TRIGGER SuppressionGroupe
-AFTER DELETE ON Appartient
-FOR EACH ROW
-DECLARE
-    nb_membres INTEGER;
+-- Procedure : Suppression du groupe si le dernier membre le quitte
+CREATE OR REPLACE PROCEDURE SuppressionGroupe (
+    p_id_groupe IN Appartient.id_groupe%TYPE,
+    p_id_utilisateur IN Appartient.id_utilisateur%TYPE
+) AS
+    v_nb_membres INTEGER;
 BEGIN
+    -- Supprimer le membre de la table Appartient
+    DELETE FROM Appartient
+    WHERE id_groupe = p_id_groupe
+    AND id_utilisateur = p_id_utilisateur;
+    
     -- Compter le nombre de membres restants dans le groupe
-    SELECT COUNT(*) INTO nb_membres
+    SELECT COUNT(*)
+    INTO v_nb_membres
     FROM Appartient
-    WHERE id_groupe = :OLD.id_groupe;
+    WHERE id_groupe = p_id_groupe;
 
-    -- Si le nombre de membres est égal à 0, supprimer le groupe
-    IF nb_membres = 0 THEN
+    -- Vérifier si le groupe est maintenant sans membres
+    IF v_nb_membres = 0 THEN
+        -- Supprimer le groupe de la table Groupe
         DELETE FROM Groupe
-        WHERE id_groupe = :OLD.id_groupe;
+        WHERE id_groupe = p_id_groupe;
     END IF;
-END;
+END SupprimerMembre;
 
 -- C/ Jeu de données
 
