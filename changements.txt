@@ -41,3 +41,56 @@ Création des Vues et Triggers [non testé]
     - Modif de "INSERT INTO Gère VALUES (2, 3, '30-feb-2024');" Pour 29-feb-2024
     - Modif de "INSERT INTO Gère VALUES (5, 1, '30-feb-2025');" Pour 28-feb-2025
 }
+
+
+
+
+-----------------
+au cas où
+-- Trigger 5 : Un groupe peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
+CREATE OR REPLACE TRIGGER GroupeUpgrade
+BEFORE INSERT ON AchatGroupe
+FOR EACH ROW
+DECLARE
+    prix_licence_actuelle NUMBER;
+    jours_restants NUMBER;
+    reduction NUMBER;
+BEGIN
+    -- Vérifier si une licence existe pour le groupe
+    SELECT COUNT(*)
+    INTO prix_licence_actuelle
+    FROM AchatGroupe ag
+    WHERE ag.id_groupe = :NEW.id_groupe;
+	DBMS_OUTPUT.PUT_LINE('Début');
+
+    -- Si une licence existe pour le groupe
+    IF prix_licence_actuelle > 0 THEN
+        -- Récupérer le prix de la licence actuelle du groupe
+        DBMS_OUTPUT.PUT_LINE('licence présente');
+        SELECT l.Prix 
+        INTO prix_licence_actuelle
+        FROM AchatGroupe ag
+        JOIN Licence l ON ag.id_licence = l.id_licence
+        WHERE ag.id_groupe = :NEW.id_groupe;
+
+
+        -- Calculer les jours restants dans la période de la licence actuelle
+        SELECT (l.durée - (SYSDATE - ag.date_achat)) 
+        INTO jours_restants
+        FROM AchatGroupe ag
+        JOIN Licence l ON ag.id_licence = l.id_licence
+        WHERE ag.id_groupe = :NEW.id_groupe;
+
+        -- Calculer la réduction basée sur les jours restants
+        IF jours_restants > 0 THEN
+            reduction := prix_licence_actuelle / jours_restants;
+
+            -- Utilisation de l'instruction UPDATE pour modifier les données dans une autre table
+            UPDATE Licence
+            SET Prix = Prix - reduction
+            WHERE id_licence = :NEW.id_licence;
+        END IF;
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Aucune licence présente');
+	END IF;
+END;
