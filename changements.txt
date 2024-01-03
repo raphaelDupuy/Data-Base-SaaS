@@ -14,7 +14,7 @@ triggers todo:
 
     Si tous les membres d’un groupe le quittent, le groupe est supprimé.
 
-    Enum poste employé / etat ticket: certaines valeurs
+    Enum poste employé / etat, Licence concernée ticket: certaines valeurs
 
 Diff Licence Entreprise / Particulier
 

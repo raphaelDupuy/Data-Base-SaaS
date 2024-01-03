@@ -128,7 +128,187 @@ CREATE TABLE Inclue (
     FOREIGN KEY (id_licence) REFERENCES Licence(id_licence)
 );
 
--- B/ Jeu de données
+
+-- B/ Intégrité des données : les triggers
+
+-- Trigger 1 : Un utilisateur ne peut pas acheter une licence si il a déjà acheté la même licence.
+CREATE OR REPLACE TRIGGER AchatLicenceUtilisateurDoublon
+BEFORE INSERT ON AchatUtilisateur
+FOR EACH ROW
+DECLARE
+    nb_achats INTEGER;
+	run_time DATE;
+BEGIN
+    run_time := SYSDATE;
+    SELECT COUNT(*) INTO nb_achats
+    FROM AchatUtilisateur AU, Licence L 
+    WHERE AU.id_utilisateur = :NEW.id_utilisateur
+    AND AU.id_licence = :NEW.id_licence
+	AND L.id_licence = :NEW.id_licence
+	AND L.durée = 'Un mois'
+    AND SYSDATE - AU.date_achat < 30;  -- Calculer la différence en jours pour un mois
+	
+    IF nb_achats > 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Cet utilisateur a déjà acheté cette licence valable un mois.');
+    END IF;
+
+	SELECT COUNT(*) INTO nb_achats
+    FROM AchatUtilisateur AU, Licence L 
+    WHERE AU.id_utilisateur = :NEW.id_utilisateur
+    AND AU.id_licence = :NEW.id_licence
+    AND L.id_licence = :NEW.id_licence
+    AND L.durée = 'Un an'
+    AND SYSDATE - AU.date_achat < 365;  -- Calculer la différence en jours pour un an
+
+    IF nb_achats > 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'Cet utilisateur a déjà acheté cette licence valable un an.');
+    END IF;
+
+END;
+
+-- Trigger 2 : Un utilisateur peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
+CREATE OR REPLACE TRIGGER AchatLicenceUtilisateur_Reduction
+BEFORE INSERT ON AchatUtilisateur
+FOR EACH ROW
+DECLARE
+    prix_licence_actuelle NUMBER;
+    jours_restants NUMBER;
+    reduction NUMBER;
+BEGIN
+    -- Récupérer le prix de la licence actuelle de l'utilisateur
+    SELECT l.Prix 
+    INTO prix_licence_actuelle
+    FROM AchatUtilisateur au
+    JOIN Licence l ON au.id_licence = l.id_licence
+    WHERE au.id_utilisateur = :NEW.id_utilisateur
+    AND ROWNUM = 1;  -- Pour s'assurer de ne récupérer qu'une seule ligne (la plus récente)
+
+    -- Calculer les jours restants dans la période de la licence actuelle
+    SELECT (l.Durée - (SYSDATE - au.date_achat)) 
+    INTO jours_restants
+    FROM AchatUtilisateur au
+    JOIN Licence l ON au.id_licence = l.id_licence
+    WHERE au.id_utilisateur = :NEW.id_utilisateur
+    AND ROWNUM = 1;
+
+    -- Calculer la réduction basée sur les jours restants
+    IF jours_restants > 0 THEN
+        reduction := prix_licence_actuelle / jours_restants;
+
+        -- Utilisation de l'instruction UPDATE pour modifier les données dans une autre table
+        UPDATE Licence
+        SET Prix = Prix - reduction
+        WHERE id_licence = :NEW.id_licence;
+
+    END IF;
+END;
+
+
+-- Trigger 3 : Un groupe est supprimé si tous les membres ont quitté le groupe.
+CREATE OR REPLACE TRIGGER SuppressionGroupe
+AFTER DELETE ON Appartient
+FOR EACH ROW
+DECLARE
+    nb_membres INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO nb_membres
+    FROM Appartient
+    WHERE id_groupe = :OLD.id_groupe;
+    IF nb_membres = 0 THEN
+        DELETE FROM Groupe
+        WHERE id_groupe = :OLD.id_groupe;
+    END IF;
+END;
+
+-- Trigger 4 : Un groupe ne peut pas acheter une licence si il a déjà acheté la même licence.
+CREATE OR REPLACE TRIGGER AchatLicenceGroupeDoublon
+BEFORE INSERT ON AchatGroupe
+FOR EACH ROW
+DECLARE
+    nb_achats INTEGER;
+	run_time DATE;
+BEGIN
+    run_time := SYSDATE;
+    SELECT COUNT(*) INTO nb_achats
+    FROM AchatGroupe ag, Licence L 
+    WHERE ag.id_groupe = :NEW.id_groupe
+    AND ag.id_licence = :NEW.id_licence
+	AND L.id_licence = :NEW.id_licence
+	AND L.durée = 'Un mois'
+    AND SYSDATE - ag.date_achat < 30;  -- Calculer la différence en jours pour un mois
+	
+    IF nb_achats > 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Ce groupe a déjà acheté cette licence valable un mois.');
+    END IF;
+
+	SELECT COUNT(*) INTO nb_achats
+    FROM AchatGroupe ag, Licence L 
+    WHERE ag.id_groupe = :NEW.id_groupe
+    AND ag.id_licence = :NEW.id_licence
+    AND L.id_licence = :NEW.id_licence
+    AND L.durée = 'Un an'
+    AND SYSDATE - ag.date_achat < 365;  -- Calculer la différence en jours pour un an
+
+    IF nb_achats > 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'Ce groupe a déjà acheté cette licence valable un an.');
+    END IF;
+END;
+
+-- Trigger 5 : Un groupe peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
+CREATE OR REPLACE TRIGGER AchatLicenceGroupeUpgrade
+BEFORE INSERT ON AchatGroupe
+FOR EACH ROW
+DECLARE
+    prix_licence_actuelle NUMBER;
+    jours_restants NUMBER;
+    reduction NUMBER;
+BEGIN
+    -- Récupérer le prix de la licence actuelle du groupe
+    SELECT l.Prix 
+    INTO prix_licence_actuelle
+    FROM AchatGroupe ag
+    JOIN Licence l ON ag.id_licence = l.id_licence
+    WHERE ag.id_groupe = :NEW.id_groupe
+    AND ROWNUM = 1;  -- Pour s'assurer de ne récupérer qu'une seule ligne (la plus récente)
+
+    -- Calculer les jours restants dans la période de la licence actuelle
+    SELECT (l.Durée - (SYSDATE - ag.date_achat)) 
+    INTO jours_restants
+    FROM AchatGroupe ag
+    JOIN Licence l ON ag.id_licence = l.id_licence
+    WHERE ag.id_groupe = :NEW.id_groupe
+    AND ROWNUM = 1;
+
+    -- Calculer la réduction basée sur les jours restants
+    IF jours_restants > 0 THEN
+        reduction := prix_licence_actuelle / jours_restants;
+
+        -- Utilisation de l'instruction UPDATE pour modifier les données dans une autre table
+        UPDATE Licence
+        SET Prix = Prix - reduction
+        WHERE id_licence = :NEW.id_licence;
+
+    END IF;
+END;
+
+-- Trigger 6 : Un utilisateur qui a acheté la même licence mensuelle 12 fois obtient 1 mois gratuit.
+CREATE OR REPLACE TRIGGER ReductionLicenceMensuelle
+BEFORE INSERT ON AchatUtilisateur
+FOR EACH ROW
+DECLARE
+    nb_achats INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO nb_achats
+    FROM AchatUtilisateur au, Licence l
+    WHERE au.id_utilisateur = :NEW.id_utilisateur
+    AND au.id_licence = l.id_licence
+    AND l.Durée = 'Un mois';
+    IF MOD(nb_achats, 12) = 0 THEN
+        :NEW.Date_achat := :NEW.Date_achat + 30;
+    END IF;
+END;
+
+-- C/ Jeu de données
 
 -- Le jeu de données doit être soigneusement préparé et permettre la validation des requêtes
 -- complexes qui seront posées par la suite. Il doit y avoir au moins 30 n-uplets par table. Les
@@ -459,7 +639,7 @@ INSERT INTO Inclue VALUES (6, 3);
 INSERT INTO Inclue VALUES (6, 4);
 INSERT INTO Inclue VALUES (6, 5);
 
---C/ Manipulation des données
+--D/ Manipulation des données
 
 -- Quels sont tous les utilisateurs ?
 select * from Utilisateur;
@@ -588,7 +768,7 @@ and i.id_logiciel = 4;
 -- GROUP BY l.Nom
 -- ORDER BY COUNT(*) DESC;
 
--- D/ Vues
+-- E/ Vues
 
 -- Vue 1 : Affiche les détails des licences achetées par les utilisateurs.
 CREATE VIEW UtilisateurAchatLicence AS
@@ -660,125 +840,3 @@ SELECT * FROM SalaireMoyenParPoste;
 -- GRANT SELECT ON StatistiquesGroupe TO Employé WHERE Poste = 'Commercial';
 -- GRANT SELECT ON SalaireMoyenParPoste TO Employé WHERE Poste = 'Chef';
 
--- E/ Intégrité des données : les triggers
-
--- Trigger 1 : Un utilisateur ne peut pas acheter une licence si il a déjà acheté la même licence.
-CREATE OR REPLACE TRIGGER AchatLicenceUtilisateurDoublon
-BEFORE INSERT ON AchatUtilisateur
-FOR EACH ROW
-DECLARE
-    nb_achats INTEGER;
-BEGIN
-    SELECT COUNT(*) INTO nb_achats
-    FROM AchatUtilisateur
-    WHERE id_utilisateur = :NEW.id_utilisateur
-    AND id_licence = :NEW.id_licence;
-    IF nb_achats > 0 THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Cet utilisateur a déjà acheté cette licence.');
-    END IF;
-END;
-
--- -- Trigger 2 : Un utilisateur peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
--- CREATE OR REPLACE TRIGGER AchatLicenceUtilisateurUpgrade
--- BEFORE INSERT ON AchatUtilisateur
--- FOR EACH ROW
--- DECLARE
---     prix_licence_actuelle NUMBER;
---     nb_jours_utilises NUMBER;
---     duree_licence NUMBER;
--- BEGIN
---     SELECT Prix INTO prix_licence_actuelle
---     FROM AchatUtilisateur au, Licence l
---     WHERE au.id_utilisateur = :NEW.id_utilisateur
---     AND au.id_licence = l.id_licence;
-    
---     SELECT Duree INTO duree_licence
---     FROM Licence
---     WHERE id_licence = :NEW.id_licence;
-    
---     SELECT COUNT(*) INTO nb_jours_utilises
---     FROM AchatUtilisateur
---     WHERE id_utilisateur = :NEW.id_utilisateur
---     AND id_licence = :NEW.id_licence;
-    
---     IF prix_licence_actuelle > :NEW.Prix THEN
---         :NEW.Prix := :NEW.Prix - (prix_licence_actuelle / duree_licence * nb_jours_utilises);
---     END IF;
--- END;
-
--- -- Trigger 3 : Un groupe est supprimé si tous les membres ont quitté le groupe.
--- CREATE OR REPLACE TRIGGER SuppressionGroupe
--- AFTER DELETE ON Appartient
--- FOR EACH ROW
--- DECLARE
---     nb_membres INTEGER;
--- BEGIN
---     SELECT COUNT(*) INTO nb_membres
---     FROM Appartient
---     WHERE id_groupe = :OLD.id_groupe;
---     IF nb_membres = 0 THEN
---         DELETE FROM Groupe
---         WHERE id_groupe = :OLD.id_groupe;
---     END IF;
--- END;
-
--- Trigger 4 : Un groupe ne peut pas acheter une licence si il a déjà acheté la même licence.
-CREATE OR REPLACE TRIGGER AchatLicenceGroupeDoublon
-BEFORE INSERT ON AchatGroupe
-FOR EACH ROW
-DECLARE
-    nb_achats INTEGER;
-BEGIN
-    SELECT COUNT(*) INTO nb_achats
-    FROM AchatGroupe
-    WHERE id_groupe = :NEW.id_groupe
-    AND id_licence = :NEW.id_licence;
-    IF nb_achats > 0 THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Ce groupe a déjà acheté cette licence.');
-    END IF;
-END;
-
--- -- Trigger 5 : Un groupe peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
--- CREATE OR REPLACE TRIGGER AchatLicenceGroupeUpgrade
--- BEFORE INSERT ON AchatGroupe
--- FOR EACH ROW
--- DECLARE
---     prix_licence_actuelle NUMBER;
---     nb_jours_utilises NUMBER;
---     duree_licence NUMBER;
--- BEGIN
---     SELECT Prix INTO prix_licence_actuelle
---     FROM AchatGroupe ag, Licence l
---     WHERE ag.id_groupe = :NEW.id_groupe
---     AND ag.id_licence = l.id_licence;
-    
---     SELECT Duree INTO duree_licence
---     FROM Licence
---     WHERE id_licence = :NEW.id_licence;
-    
---     SELECT COUNT(*) INTO nb_jours_utilises
---     FROM AchatGroupe
---     WHERE id_groupe = :NEW.id_groupe
---     AND id_licence = :NEW.id_licence;
-    
---     IF prix_licence_actuelle > :NEW.Prix THEN
---         :NEW.Prix := :NEW.Prix - (prix_licence_actuelle / duree_licence * nb_jours_utilises);
---     END IF;
--- END;
-
--- Trigger 6 : Un utilisateur qui a acheté la même licence mensuelle 12 fois obtient 1 mois gratuit.
-CREATE OR REPLACE TRIGGER ReductionLicenceMensuelle
-BEFORE INSERT ON AchatUtilisateur
-FOR EACH ROW
-DECLARE
-    nb_achats INTEGER;
-BEGIN
-    SELECT COUNT(*) INTO nb_achats
-    FROM AchatUtilisateur au, Licence l
-    WHERE au.id_utilisateur = :NEW.id_utilisateur
-    AND au.id_licence = l.id_licence
-    AND l.Durée = 'Un mois';
-    IF MOD(nb_achats, 12) = 0 THEN
-        :NEW.Date_achat := :NEW.Date_achat + 30;
-    END IF;
-END;
