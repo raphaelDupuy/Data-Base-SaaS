@@ -224,7 +224,7 @@ BEGIN
 END;
 
 -- Trigger 4 : Vérification que le ticket à gerer est bien en attente
-CREATE OR REPLACE TRIGGER TraitementTicket
+CREATE OR REPLACE TRIGGER TraitementTicketEtat
 BEFORE INSERT ON Récupère
 FOR EACH ROW
 DECLARE
@@ -241,7 +241,7 @@ BEGIN
 END;
 
 -- Trigger 5 : Vérifier que la date est valide
-CREATE OR REPLACE TRIGGER TraitementTicket
+CREATE OR REPLACE TRIGGER TraitementTicketDate
 BEFORE INSERT ON Récupère
 FOR EACH ROW
 DECLARE
