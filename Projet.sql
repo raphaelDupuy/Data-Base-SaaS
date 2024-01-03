@@ -154,7 +154,7 @@ BEGIN
     WHERE AU.id_utilisateur = :NEW.id_utilisateur
     AND AU.id_licence = :NEW.id_licence
 	AND L.id_licence = :NEW.id_licence
-	AND L.durée = 'Un mois'
+	AND L.durée = 30
     AND SYSDATE - AU.date_achat < 30;  -- Calculer la différence en jours pour un mois
 	
     IF nb_achats > 0 THEN
@@ -166,7 +166,7 @@ BEGIN
     WHERE AU.id_utilisateur = :NEW.id_utilisateur
     AND AU.id_licence = :NEW.id_licence
     AND L.id_licence = :NEW.id_licence
-    AND L.durée = 'Un an'
+    AND L.durée = 365
     AND SYSDATE - AU.date_achat < 365;  -- Calculer la différence en jours pour un an
 
     IF nb_achats > 0 THEN
@@ -223,7 +223,7 @@ BEGIN
     FROM AchatUtilisateur au, Licence l
     WHERE au.id_utilisateur = :NEW.id_utilisateur
     AND au.id_licence = l.id_licence
-    AND l.Durée = 'Un mois';
+    AND l.Durée = 30;
     IF MOD(nb_achats, 12) = 0 THEN
         :NEW.Date_achat := :NEW.Date_achat + 30;
     END IF;
@@ -244,7 +244,7 @@ BEGIN
     WHERE ag.id_groupe = :NEW.id_groupe
     AND ag.id_licence = :NEW.id_licence
 	AND L.id_licence = :NEW.id_licence
-	AND L.durée = 'Un mois'
+	AND L.durée = 30
     AND SYSDATE - ag.date_achat < 30;  -- Calculer la différence en jours pour un mois
 	
     IF nb_achats > 0 THEN
@@ -256,7 +256,7 @@ BEGIN
     WHERE ag.id_groupe = :NEW.id_groupe
     AND ag.id_licence = :NEW.id_licence
     AND L.id_licence = :NEW.id_licence
-    AND L.durée = 'Un an'
+    AND L.durée = 365
     AND SYSDATE - ag.date_achat < 365;  -- Calculer la différence en jours pour un an
 
     IF nb_achats > 0 THEN

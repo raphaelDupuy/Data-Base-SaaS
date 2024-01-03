@@ -10,6 +10,7 @@ triggers done:
     AchatLicenceUtilisateurDoublon   /   AchatLicenceUtilisateurUpgrade   /   ReductionMensuelleUtilisateur
 
 triggers todo:
+    
 
     Enum poste employé / etat, Licence concernée ticket: certaines valeurs
 
