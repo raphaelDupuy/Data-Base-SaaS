@@ -56,7 +56,7 @@ CREATE TABLE Ticket (
 
 CREATE TABLE Licence (
     id_licence NUMBER(10) NOT NULL,
-    Durée NUMBER(3),
+    Durée NUMBER(3) CHECK (Durée IN (30, 365)) NOT NULL
     Prix NUMBER(6, 2) NOT NULL,
     Description VARCHAR2(255),
     PRIMARY KEY (id_licence)
@@ -76,7 +76,7 @@ CREATE TABLE AchatUtilisateur (
 CREATE TABLE AchatGroupe (
     id_groupe NOT NULL,
     id_licence NOT NULL,
-    prix NUMBER(6, 2) NOT NULL
+    prix NUMBER(6, 2) NOT NULL,
     Date_achat DATE NOT NULL,
     PRIMARY KEY (id_groupe, id_licence, Date_achat),
     FOREIGN KEY (id_groupe) REFERENCES Groupe(id_groupe),
@@ -92,7 +92,7 @@ CREATE TABLE Employé (
     Age NUMBER(3),
     Num_tel CHAR(10),
     Adresse VARCHAR2(100),
-    Poste VARCHAR2(20),
+    Poste VARCHAR2(20) CHECK (Poste IN ('Chef', 'Développeur', 'Commercial', 'Support'))
     Salaire NUMBER(8, 2),
     Date_arrivée DATE,
     PRIMARY KEY (id_employé)
@@ -311,36 +311,9 @@ BEGIN
 	END IF;
 END;
 
--- Trigger 6 : Supperssion du groupe quand la dernière personne le quitte
-CREATE OR REPLACE TRIGGER SuppressionGroupe
-AFTER DELETE ON Appartient
-FOR EACH ROW
-DECLARE
-    nb_membres INTEGER;
-BEGIN
-    -- Compter le nombre de membres restants dans le groupe
-    SELECT COUNT(*) INTO nb_membres
-    FROM Appartient
-    WHERE id_groupe = :OLD.id_groupe;
-
-    -- Si le nombre de membres est égal à 0, supprimer le groupe
-    IF nb_membres = 0 THEN
-        DELETE FROM Groupe
-        WHERE id_groupe = :OLD.id_groupe;
-    END IF;
-END SuppressionGroupe;
-
-
 
 
 -- C/ Jeu de données
-
--- Le jeu de données doit être soigneusement préparé et permettre la validation des requêtes
--- complexes qui seront posées par la suite. Il doit y avoir au moins 30 n-uplets par table. Les
--- valeurs choisies pour les attributs doivent être cohérentes avec le schéma de la base.
--- Pour créer vos jeux de données, vous utiliserez tout d’abord des requêtes SQL (insert), puis
--- l’outil de chargement d’Oracle SQL*LOAD pour un chargement massif des données. Pour ce
--- faire, créer un fichier nomfichier.ctl qui contient les définitions suivantes
 
 -- Insert
 INSERT INTO Utilisateur VALUES (1, 'Doe', 'John', 'johndoe@gmail.com', 25, '10-jan-2023', '0684052040', '123 Main Street, London', 'password');
@@ -752,7 +725,7 @@ where u.Email = e.Email;
 -- Combien de ventes a fait le SAAS ? Combien d’argent ?
 select count(*) as "Nombre de ventes"
 from AchatUtilisateur;
-select sum(Prix) as "Argent gagné"
+select sum(l.Prix) as "Argent gagné"
 from AchatUtilisateur au, Licence l
 where au.id_licence = l.id_licence;
 
@@ -799,7 +772,7 @@ and i.id_logiciel = 4;
 -- E/ Vues
 
 -- Vue 1 : Affiche les détails des licences achetées par les utilisateurs.
-CREATE VIEW UtilisateurAchatLicence AS
+CREATE OR REPLACE VIEW UtilisateurAchatLicence AS
 SELECT U.id_utilisateur, U.Nom, U.Prenom, A.Date_achat, L.*
 FROM Utilisateur U
 JOIN AchatUtilisateur A ON U.id_utilisateur = A.id_utilisateur
@@ -807,7 +780,7 @@ JOIN Licence L ON A.id_licence = L.id_licence;
 SELECT * FROM UtilisateurAchatLicence;
 
 -- Vue 2 : Affiche les détails des licences achetées par les groupes.
-CREATE VIEW GroupeAchatLicence AS
+CREATE OR REPLACE VIEW GroupeAchatLicence AS
 SELECT G.id_groupe, G.Nom, A.Date_achat, L.*
 FROM Groupe G
 JOIN AchatGroupe A ON G.id_groupe = A.id_groupe
@@ -815,7 +788,7 @@ JOIN Licence L ON A.id_licence = L.id_licence;
 SELECT * FROM GroupeAchatLicence;
 
 -- Vue 3 : Affiche les détails des modifications de logiciels effectuées par les employés.
-CREATE VIEW EmployeModifieLogiciel AS
+CREATE OR REPLACE VIEW EmployeModifieLogiciel AS
 SELECT E.id_employé, E.Nom AS "Nom Employe", E.Prenom, M.Date_modification, M.Version, L.*
 FROM Employé E
 JOIN Modifie M ON E.id_employé = M.id_employé
@@ -823,7 +796,7 @@ JOIN Logiciel L ON M.id_logiciel = L.id_logiciel;
 SELECT * FROM EmployeModifieLogiciel;
 
 -- Vue 4 : Affiche les détails de la gestion des licences par les employés.
-CREATE VIEW EmployeGereLicence AS
+CREATE OR REPLACE VIEW EmployeGereLicence AS
 SELECT E.id_employé, E.Nom as "Nom Employe", E.Prenom, G.Date_modification, L.*
 FROM Employé E
 JOIN Gère G ON E.id_employé = G.id_employé
@@ -831,21 +804,21 @@ JOIN Licence L ON G.id_licence = L.id_licence;
 SELECT * FROM EmployeGereLicence;
 
 -- Vue 5 : NombreUtilisateursParGroupe récupère le nombre d'utilisateurs par groupe.
-CREATE VIEW NombreUtilisateursParGroupe AS
+CREATE OR REPLACE VIEW NombreUtilisateursParGroupe AS
 SELECT G.id_groupe, G.Nom, COUNT(A.id_utilisateur) AS Nombre_Utilisateurs
 FROM Groupe G LEFT JOIN Appartient A ON G.id_groupe = A.id_groupe
 GROUP BY G.id_groupe, G.Nom;
 SELECT * FROM NombreUtilisateursParGroupe;
 
 -- Vue 6 : StatistiquesUtilisateur récupère les utilisateurs ainsi que le nombre d'achat de licences et les dépenses moyennes de chaque utilisateur.
-CREATE VIEW StatistiquesUtilisateur AS
+CREATE OR REPLACE VIEW StatistiquesUtilisateur AS
 SELECT U.id_utilisateur, U.Nom, U.Prenom, COUNT(A.id_licence) AS Nombre_Achats, AVG(L.Prix) AS Prix_Moyen
 FROM Utilisateur U LEFT JOIN AchatUtilisateur A ON U.id_utilisateur = A.id_utilisateur LEFT JOIN Licence L ON A.id_licence = L.id_licence
 GROUP BY U.id_utilisateur, U.Nom, U.Prenom;
 SELECT * FROM StatistiquesUtilisateur;
 
 -- Vue 7 : StatistiquesGroupe récupère les groupes ainsi que le nombre d'achat de licences et la dépense totale du groupe.
-CREATE VIEW StatistiquesGroupe AS
+CREATE OR REPLACE VIEW StatistiquesGroupe AS
 SELECT G.id_groupe, G.Nom, COUNT(A.id_licence) AS Nombre_Achats, SUM(L.Prix) AS Prix_Total
 FROM Groupe G LEFT JOIN AchatGroupe A ON G.id_groupe = A.id_groupe LEFT JOIN Licence L ON A.id_licence = L.id_licence
 GROUP BY G.id_groupe, G.Nom;
@@ -858,13 +831,64 @@ FROM Employé
 GROUP BY Poste;
 SELECT * FROM SalaireMoyenParPoste;
 
--- GRANT SELECT ON UtilisateurAchatLicence TO Employé WHERE Poste = 'Commercial';
--- GRANT SELECT ON GroupeAchatLicence TO Employé WHERE Poste = 'Commercial';
--- GRANT SELECT ON EmployeModifieLogiciel TO Employé WHERE Poste = 'Développeur';
--- GRANT SELECT ON EmployeGereLicence TO Employé WHERE Poste = 'Commercial';
--- -- Donner l'accès aux membres du groupe ? Si oui, comment ?
--- GRANT SELECT ON NombreUtilisateursParGroupe TO Employé WHERE Poste = 'Commercial';
--- GRANT SELECT ON StatistiquesUtilisateur TO Employé WHERE Poste = 'Commercial';
--- GRANT SELECT ON StatistiquesGroupe TO Employé WHERE Poste = 'Commercial';
--- GRANT SELECT ON SalaireMoyenParPoste TO Employé WHERE Poste = 'Chef';
+-- Vue 9 : MembresGroupe récupère les membres du groupe de l'utilisateur.
+CREATE OR REPLACE VIEW MembresGroupe as
+SELECT U.id_utilisateur, U.Nom, U.Prenom, U.Email
+FROM Utilisateur U, Appartient A, Groupe G
+WHERE U.id_utilisateur = A.id_utilisateur AND A.id_groupe = G.id_groupe;
+SELECT * FROM MembresGroupe;
 
+CREATE ROLE Utilisateur;
+CREATE ROLE Employé;
+CREATE ROLE Groupe;
+
+GRANT SELECT ON UtilisateurAchatLicence TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON GroupeAchatLicence TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON EmployeModifieLogiciel TO Employé WHERE Poste = 'Développeur';
+GRANT SELECT ON EmployeGereLicence TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON NombreUtilisateursParGroupe TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON NombreUtilisateursParGroupe TO Utilisateur WHERE id_utilisateur Appartient.id_utilisateur AND Appartient.id_groupe = Groupe.id_groupe
+GRANT SELECT ON StatistiquesUtilisateur TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON StatistiquesGroupe TO Employé WHERE Poste = 'Commercial';
+GRANT SELECT ON SalaireMoyenParPoste TO Employé WHERE Poste = 'Chef';
+GRANT SELECT ON MembresGroupe TO Utilisateur WHERE id_utilisateur Appartient.id_utilisateur AND Appartient.id_groupe = Groupe.id_groupe;
+
+-- Autres Permissions
+
+-- L'Employé qui a le poste Chef peut tout faire.
+GRANT ALL ON Utilisateur TO Employé WHERE Poste = 'Chef';
+GRANT ALL ON Groupe TO Employé WHERE Poste = 'Chef';
+GRANT ALL ON Logiciel TO Employé WHERE Poste = 'Chef';
+GRANT ALL ON Ticket TO Employé WHERE Poste = 'Chef';
+GRANT ALL ON Licence TO Employé WHERE Poste = 'Chef';
+
+-- L'Employé qui a le poste Développeur peut modifier un logiciel.
+GRANT UPDATE ON Logiciel TO Employé WHERE Poste = 'Développeur';
+
+-- L'Employé qui a le poste Commercial peut gérer une licence.
+GRANT UPDATE ON Licence TO Employé WHERE Poste = 'Commercial';
+
+-- L'Employé qui a le poste Support peut modifier un ticket.
+GRANT UPDATE ON Ticket TO Employé WHERE Poste = 'Support';
+
+-- L'Utilisateur peut créer un groupe et un ticket.
+GRANT INSERT ON Groupe TO Utilisateur;
+GRANT INSERT ON Ticket TO Utilisateur;
+
+-- L'Utilisateur peut acheter une licence.
+GRANT INSERT ON AchatUtilisateur TO Utilisateur;
+
+-- L'Utilisateur peut rejoindre un groupe.
+GRANT INSERT ON Appartient TO Utilisateur;
+
+-- Le Groupe peut acheter une licence.
+GRANT INSERT ON AchatGroupe TO Groupe;
+
+-- Le Groupe peut ajouter un utilisateur.
+GRANT INSERT ON Appartient TO Groupe;
+
+-- Les membres d'un groupe peuvent voir modifier le nom et la description du groupe.
+GRANT SELECT, UPDATE ON Groupe TO Appartient;
+
+-- Les membres d'un groupe peuvent voir les utilisateurs du groupe.
+GRANT SELECT ON Appartient TO Utilisateur WHERE id_utilisateur = Appartient.id_utilisateur AND Appartient.id_groupe = Groupe.id_groupe;
