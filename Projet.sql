@@ -144,16 +144,14 @@ BEFORE INSERT ON AchatUtilisateur
 FOR EACH ROW
 DECLARE
     nb_achats INTEGER;
-	run_time DATE;
 BEGIN
-    run_time := SYSDATE;
     SELECT COUNT(*) INTO nb_achats
     FROM AchatUtilisateur AU, Licence L 
     WHERE AU.id_utilisateur = :NEW.id_utilisateur
     AND AU.id_licence = :NEW.id_licence
 	AND L.id_licence = :NEW.id_licence
 	AND L.durée = 30
-    AND SYSDATE - AU.date_achat < 30;  -- Calculer la différence en jours pour un mois
+    AND :NEW.date_achat - AU.date_achat < 30;  -- Calculer la différence en jours pour un mois
 	
     IF nb_achats > 0 THEN
         RAISE_APPLICATION_ERROR(-20001, 'Cet utilisateur a déjà acheté cette licence valable un mois.');
@@ -165,13 +163,14 @@ BEGIN
     AND AU.id_licence = :NEW.id_licence
     AND L.id_licence = :NEW.id_licence
     AND L.durée = 365
-    AND SYSDATE - AU.date_achat < 365;  -- Calculer la différence en jours pour un an
+    AND :NEW.date_achat - AU.date_achat < 365;  -- Calculer la différence en jours pour un an
 
     IF nb_achats > 0 THEN
         RAISE_APPLICATION_ERROR(-20002, 'Cet utilisateur a déjà acheté cette licence valable un an.');
     END IF;
 
 END;
+
 
 
 -- Trigger 3 : Un utilisateur qui a acheté la même licence mensuelle 12 fois obtient 1 mois gratuit.
@@ -198,16 +197,14 @@ BEFORE INSERT ON AchatGroupe
 FOR EACH ROW
 DECLARE
     nb_achats INTEGER;
-	run_time DATE;
 BEGIN
-    run_time := SYSDATE;
     SELECT COUNT(*) INTO nb_achats
     FROM AchatGroupe ag, Licence L 
     WHERE ag.id_groupe = :NEW.id_groupe
     AND ag.id_licence = :NEW.id_licence
 	AND L.id_licence = :NEW.id_licence
 	AND L.durée = 30
-    AND SYSDATE - ag.date_achat < 30;  -- Calculer la différence en jours pour un mois
+    AND :NEW.date_achat - ag.date_achat < 30;  -- Calculer la différence en jours pour un mois
 	
     IF nb_achats > 0 THEN
         RAISE_APPLICATION_ERROR(-20001, 'Ce groupe a déjà acheté cette licence valable un mois.');
@@ -219,7 +216,7 @@ BEGIN
     AND ag.id_licence = :NEW.id_licence
     AND L.id_licence = :NEW.id_licence
     AND L.durée = 365
-    AND SYSDATE - ag.date_achat < 365;  -- Calculer la différence en jours pour un an
+    AND :NEW.date_achat - ag.date_achat < 365;  -- Calculer la différence en jours pour un an
 
     IF nb_achats > 0 THEN
         RAISE_APPLICATION_ERROR(-20002, 'Ce groupe a déjà acheté cette licence valable un an.');
@@ -243,7 +240,7 @@ BEGIN
         DELETE FROM Groupe
         WHERE id_groupe = :OLD.id_groupe;
     END IF;
-END SuppressionGroupe;
+END;
 
 -- C/ Jeu de données
 
@@ -278,6 +275,7 @@ INSERT INTO Utilisateur VALUES (27, 'Flores', 'Gabriela', 'gabrielaflores@gmail.
 INSERT INTO Utilisateur VALUES (28, 'Gomez', 'Andres', 'andresgomez@gmail.com', 28, '25-apr-2025', '0787420052', '123 Cranberry Street, Warsaw', 'aWEsOme42');
 INSERT INTO Utilisateur VALUES (29, 'Reyes', 'Valentina', 'valentinareyes@gmail.com', 40, '30-may-2025', '0662352068', '456 Strawberry Street, London', 'password18');
 INSERT INTO Utilisateur VALUES (30, 'Morales', 'Camila', 'camilamorales@free.fr', 27, '05-jun-2025', '0688402069', '789 Raspberry Street, Paris', 'password19');
+select * from Utilisateur;
 
 -- Les données ont été générées par IA à partir du 1er insert fait manuellemnt. Quelques valeurs, principalement les numéros de téléphone, les mots de passe et les noms des villes ont ensuite été modifiées pour plus de réalisme.
 
@@ -292,6 +290,7 @@ INSERT INTO Groupe VALUES (7, 'Groupe 7', 'Groupe de test 7');
 INSERT INTO Groupe VALUES (8, 'Groupe 8', 'Groupe de test 8');
 INSERT INTO Groupe VALUES (9, 'Groupe 9', 'Groupe de test 9');
 INSERT INTO Groupe VALUES (10, 'Le Super Groupe de Camila', 'Groupe de Camila');
+select * from Groupe;
 
 -- Insert Logiciel
 INSERT INTO Logiciel VALUES (1, 'Logiciel 1', 'Logiciel de test 1');
@@ -300,6 +299,7 @@ INSERT INTO Logiciel VALUES (3, 'Logiciel 3', 'Logiciel de test 3');
 INSERT INTO Logiciel VALUES (4, 'Logiciel 4', 'Logiciel de test 4');
 INSERT INTO Logiciel VALUES (5, 'Logiciel 5', 'Logiciel de test 5');
 INSERT INTO Logiciel VALUES (6, 'Logiciel 6', 'Logiciel de test 6');
+select * from Logiciel;
 
 -- Insert Ticket
 INSERT INTO Ticket VALUES (1, 'Bug bizarre', 'Il y a un bug quand on charge le fichier excel dans le Logiciel 1', 'Logiciel 1', 1, '10-jan-2023', 'Traité');
@@ -332,6 +332,7 @@ INSERT INTO Ticket VALUES (27, 'Ticket 27', 'Contenu du ticket 27', 'Logiciel 2'
 INSERT INTO Ticket VALUES (28, 'Ticket 28', 'Contenu du ticket 28', 'Logiciel 5', 28, '25-apr-2025', 'En attente');
 INSERT INTO Ticket VALUES (29, 'Ticket 29', 'Contenu du ticket 29', 'Logiciel 6', 29, '30-may-2025', 'En attente');
 INSERT INTO Ticket VALUES (30, 'Ticket 30', 'Contenu du ticket 30', 'Logiciel 3', 30, '05-jun-2025', 'En attente');
+select * from Ticket;
 
 -- Insert Licence
 INSERT INTO Licence VALUES (1, 30, 10, 'Licence 1');
@@ -343,9 +344,9 @@ INSERT INTO Licence VALUES (6, 365, 200, 'Licence 6');
 select * from Licence;
 
 -- Insert AchatUtilisateur
+-- Insert AchatUtilisateur
 INSERT INTO AchatUtilisateur VALUES (1, 1, '10-feb-2023');
 INSERT INTO AchatUtilisateur VALUES (2, 2, '15-feb-2023');
-INSERT INTO AchatUtilisateur VALUES (1, 1, '10-mar-2023');
 INSERT INTO AchatUtilisateur VALUES (3, 3, '20-mar-2023');
 INSERT INTO AchatUtilisateur VALUES (1, 1, '10-apr-2023');
 INSERT INTO AchatUtilisateur VALUES (3, 3, '20-apr-2023');
@@ -365,10 +366,10 @@ INSERT INTO AchatUtilisateur VALUES (8, 2, '10-oct-2023');
 INSERT INTO AchatUtilisateur VALUES (9, 4, '25-nov-2023');
 INSERT INTO AchatUtilisateur VALUES (10, 5, '30-dec-2023');
 INSERT INTO AchatUtilisateur VALUES (11, 6, '05-jan-2024');
-INSERT INTO AchatUtilisateur VALUES (10, 5, '30-jan-2024');
+INSERT INTO AchatUtilisateur VALUES (10, 5, '1-feb-2024');
 INSERT INTO AchatUtilisateur VALUES (12, 6, '05-feb-2024');
 INSERT INTO AchatUtilisateur VALUES (2, 2, '15-feb-2024');
-INSERT INTO AchatUtilisateur VALUES (10, 5, '29-feb-2024');
+INSERT INTO AchatUtilisateur VALUES (10, 5, '02-mar-2024');
 INSERT INTO AchatUtilisateur VALUES (13, 1, '10-mar-2024');
 INSERT INTO AchatUtilisateur VALUES (13, 1, '10-apr-2024');
 INSERT INTO AchatUtilisateur VALUES (14, 2, '15-apr-2024');
@@ -435,6 +436,7 @@ INSERT INTO Employé VALUES (12, 'Lewis', 'Olivia', 'olivia.lewis@saas.com', 25,
 INSERT INTO Employé VALUES (13, 'Walker', 'James', 'james.walker@saas.com', 29, '0687451236', '963 Sunset Boulevard, Los Angeles', 'Commercial', '45000.00', '12-may-2024');
 INSERT INTO Employé VALUES (14, 'Brant', 'Ava', 'ava.brant@saas.com', 26, '0654789321', '741 Vine Street, Los Angeles', 'Support', '35000.00', '27-jul-2024');
 INSERT INTO Employé VALUES (15, 'Young', 'William', 'william.young@saas.com', 30, '0654024060', '369 Hollywood Boulevard, Los Angeles', 'Commercial', '45000.00', '11-oct-2024');
+select * from Employé;
 
 -- Insert Modifie
 INSERT INTO Modifie VALUES (1, 1, '10-mar-2022', '0.1');
@@ -476,6 +478,7 @@ INSERT INTO Modifie VALUES (7, 2, '20-jun-2025', '1.3');
 INSERT INTO Modifie VALUES (6, 5, '25-jul-2025', '0.4');
 INSERT INTO Modifie VALUES (3, 1, '30-aug-2025', '1.5');
 INSERT INTO Modifie VALUES (7, 4, '05-sep-2025', '1.0');
+select * from Modifie;
 
 -- Insert Gère
 INSERT INTO Gère VALUES (1, 1, '20-jun-2022');
@@ -509,7 +512,8 @@ INSERT INTO Gère VALUES (2, 5, '25-jan-2025');
 INSERT INTO Gère VALUES (5, 1, '28-feb-2025');
 INSERT INTO Gère VALUES (8, 6, '05-mar-2025');
 INSERT INTO Gère VALUES (5, 2, '10-apr-2025');
-    
+select * from Gère;
+
 -- Insert Appartient
 INSERT INTO Appartient VALUES (1, 1);
 INSERT INTO Appartient VALUES (1, 2);
@@ -547,6 +551,7 @@ INSERT INTO Appartient VALUES (9, 29);
 INSERT INTO Appartient VALUES (9, 30);
 INSERT INTO Appartient VALUES (9, 28);
 INSERT INTO Appartient VALUES (10, 30);
+select * from Appartient;
 
 -- Insert Inclue
 INSERT INTO Inclue VALUES (1, 1);
@@ -571,6 +576,7 @@ INSERT INTO Inclue VALUES (6, 2);
 INSERT INTO Inclue VALUES (6, 3);
 INSERT INTO Inclue VALUES (6, 4);
 INSERT INTO Inclue VALUES (6, 5);
+select * from Inclue;
 
 --D/ Manipulation des données
 
