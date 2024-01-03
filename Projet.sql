@@ -854,3 +854,32 @@ GRANT SELECT, UPDATE ON Groupe TO Appartient;
 
 -- Les membres d'un groupe peuvent voir les utilisateurs du groupe.
 GRANT SELECT ON Appartient TO Utilisateur WHERE id_utilisateur = Appartient.id_utilisateur AND Appartient.id_groupe = Groupe.id_groupe;
+
+-- F/ Méta-données
+
+-- Liste des contraintes d'intégrité dans le fichier liste_ora_constraints
+SELECT TABLE_NAME, CONSTRAINT_NAME, CONSTRAINT_TYPE, SEARCH_CONDITION
+FROM USER_CONSTRAINTS
+WHERE OWNER = USER
+ORDER BY TABLE_NAME, CONSTRAINT_TYPE;
+
+-- Liste des triggers dans le fichier liste_ora_triggers
+SELECT TABLE_NAME, TRIGGER_NAME, TRIGGER_TYPE, TRIGGERING_EVENT, TRIGGER_BODY
+FROM USER_TRIGGERS
+WHERE OWNER = USER
+ORDER BY TABLE_NAME;
+
+-- Liste des tables dans le fichier liste_ora_tables
+SELECT TABLE_NAME
+FROM USER_TABLES
+WHERE OWNER = USER;
+
+-- Liste des vues dans le fichier liste_ora_vues
+SELECT VIEW_NAME
+FROM USER_VIEWS
+WHERE OWNER = USER;
+
+-- Liste des procédures dans le fichier liste_ora_procedures
+SELECT OBJECT_NAME
+FROM USER_OBJECTS
+WHERE OBJECT_TYPE = 'PROCEDURE' AND OWNER = USER;
