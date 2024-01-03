@@ -207,7 +207,7 @@ BEGIN
     AND :NEW.date_achat - ag.date_achat < 30;  -- Calculer la différence en jours pour un mois
 	
     IF nb_achats > 0 THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Ce groupe a déjà acheté cette licence valable un mois.');
+        RAISE_APPLICATION_ERROR(-20005, 'Ce groupe a déjà acheté cette licence valable un mois.');
     END IF;
 
 	SELECT COUNT(*) INTO nb_achats
@@ -219,7 +219,7 @@ BEGIN
     AND :NEW.date_achat - ag.date_achat < 365;  -- Calculer la différence en jours pour un an
 
     IF nb_achats > 0 THEN
-        RAISE_APPLICATION_ERROR(-20002, 'Ce groupe a déjà acheté cette licence valable un an.');
+        RAISE_APPLICATION_ERROR(-20006, 'Ce groupe a déjà acheté cette licence valable un an.');
     END IF;
 END;
 
