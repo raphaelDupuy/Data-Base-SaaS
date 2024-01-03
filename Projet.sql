@@ -173,7 +173,7 @@ END;
 
 
 
--- Trigger 3 : Un utilisateur qui a acheté la même licence mensuelle 12 fois obtient 1 mois gratuit.
+-- Trigger 2 : Un utilisateur qui a acheté la même licence mensuelle 12 fois obtient 1 mois gratuit.
 CREATE OR REPLACE TRIGGER ReductionMensuelleUtilisateur
 BEFORE INSERT ON AchatUtilisateur
 FOR EACH ROW
@@ -191,7 +191,7 @@ BEGIN
 END;
 
 
--- Trigger 4 : Un groupe ne peut pas acheter une licence si il a déjà acheté la même licence.
+-- Trigger 3 : Un groupe ne peut pas acheter une licence si il a déjà acheté la même licence.
 CREATE OR REPLACE TRIGGER GroupeDoublon
 BEFORE INSERT ON AchatGroupe
 FOR EACH ROW
@@ -366,7 +366,7 @@ INSERT INTO AchatUtilisateur VALUES (8, 2, '10-oct-2023');
 INSERT INTO AchatUtilisateur VALUES (9, 4, '25-nov-2023');
 INSERT INTO AchatUtilisateur VALUES (10, 5, '30-dec-2023');
 INSERT INTO AchatUtilisateur VALUES (11, 6, '05-jan-2024');
-INSERT INTO AchatUtilisateur VALUES (10, 5, '1-feb-2024');
+INSERT INTO AchatUtilisateur VALUES (10, 5, '01-feb-2024');
 INSERT INTO AchatUtilisateur VALUES (12, 6, '05-feb-2024');
 INSERT INTO AchatUtilisateur VALUES (2, 2, '15-feb-2024');
 INSERT INTO AchatUtilisateur VALUES (10, 5, '02-mar-2024');
