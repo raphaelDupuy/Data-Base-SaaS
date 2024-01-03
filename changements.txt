@@ -6,11 +6,11 @@ permissions:
     Un membre du support a accès aux tables Ticket, Licence. Il a la permission de modifier Ticket.
 
 triggers done:
-    AchatLicenceGroupeDoublon   /   AchatLicenceGroupeUpgrade   /   SuppressionGroupe
-    AchatLicenceUtilisateurDoublon   /   AchatLicenceUtilisateurUpgrade   /   ReductionMensuelleUtilisateur
+    AchatLicenceGroupeDoublon   /   SuppressionGroupe
+    AchatLicenceUtilisateurDoublon   /   ReductionMensuelleUtilisateur
 
 triggers todo:
-    
+
 
     Enum poste employé / etat, Licence concernée ticket: certaines valeurs
 

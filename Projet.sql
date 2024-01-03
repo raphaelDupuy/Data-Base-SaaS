@@ -65,7 +65,6 @@ CREATE TABLE Licence (
 CREATE TABLE AchatUtilisateur (
     id_utilisateur NOT NULL,
     id_licence NOT NULL,
-    prix NUMBER(6, 2) NOT NULL,
     Date_achat DATE NOT NULL,
     PRIMARY KEY (id_utilisateur, id_licence, Date_achat),
     FOREIGN KEY (id_utilisateur) REFERENCES Utilisateur(id_utilisateur),
@@ -76,7 +75,6 @@ CREATE TABLE AchatUtilisateur (
 CREATE TABLE AchatGroupe (
     id_groupe NOT NULL,
     id_licence NOT NULL,
-    prix NUMBER(6, 2) NOT NULL
     Date_achat DATE NOT NULL,
     PRIMARY KEY (id_groupe, id_licence, Date_achat),
     FOREIGN KEY (id_groupe) REFERENCES Groupe(id_groupe),
@@ -300,7 +298,6 @@ BEGIN
 
         -- Calculer la réduction basée sur les jours restants
         IF jours_restants > 0 THEN
-            DBMS_OUTPUT.PUT_LINE('Aucune licence présente');
             reduction := prix_licence_actuelle / jours_restants;
 
             -- Utilisation de l'instruction UPDATE pour modifier les données dans une autre table
@@ -308,6 +305,8 @@ BEGIN
             SET Prix = Prix - reduction
             WHERE id_licence = :NEW.id_licence;
         END IF;
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Aucune licence présente');
 	END IF;
 END;
 
@@ -438,80 +437,80 @@ INSERT INTO Licence VALUES (6, 365, 200, 'Licence 6');
 select * from Licence;
 
 -- Insert AchatUtilisateur
-INSERT INTO AchatUtilisateur VALUES (1, 1, 10, '10-feb-2023');
-INSERT INTO AchatUtilisateur VALUES (2, 2, 100, '15-feb-2023');
-INSERT INTO AchatUtilisateur VALUES (1, 1, 10, '10-mar-2023');
-INSERT INTO AchatUtilisateur VALUES (3, 3, 19.90, '20-mar-2023');
-INSERT INTO AchatUtilisateur VALUES (1, 1, 10, '10-apr-2023');
-INSERT INTO AchatUtilisateur VALUES (3, 3, 19.90, '20-apr-2023');
-INSERT INTO AchatUtilisateur VALUES (4, 4, 150, '25-apr-2023');
-INSERT INTO AchatUtilisateur VALUES (1, 1, 10, '10-may-2023');
-INSERT INTO AchatUtilisateur VALUES (4, 2, 100, '26-may-2023');
-INSERT INTO AchatUtilisateur VALUES (5, 5, 49.90, '30-may-2023');
-INSERT INTO AchatUtilisateur VALUES (6, 6, 200, '05-jun-2023');
-INSERT INTO AchatUtilisateur VALUES (1, 1, 10, '10-jun-2023');
-INSERT INTO AchatUtilisateur VALUES (5, 5, 49.90 ,'30-jun-2023');
-INSERT INTO AchatUtilisateur VALUES (1, 1, 10, '10-jul-2023');
-INSERT INTO AchatUtilisateur VALUES (5, 5, 49.90, '30-jul-2023');
-INSERT INTO AchatUtilisateur VALUES (1, 1, 10, '10-aug-2023');
-INSERT INTO AchatUtilisateur VALUES (5, 5, 49.90, '30-aug-2023');
-INSERT INTO AchatUtilisateur VALUES (1, 2, 100, '10-sep-2023');
-INSERT INTO AchatUtilisateur VALUES (8, 2, 100, '10-oct-2023');
-INSERT INTO AchatUtilisateur VALUES (9, 4, 150, '25-nov-2023');
-INSERT INTO AchatUtilisateur VALUES (10, 5, 49.90, '30-dec-2023');
-INSERT INTO AchatUtilisateur VALUES (11, 6, 200, '05-jan-2024');
-INSERT INTO AchatUtilisateur VALUES (10, 5, 49.90, '30-jan-2024');
-INSERT INTO AchatUtilisateur VALUES (12, 6, 200, '05-feb-2024');
-INSERT INTO AchatUtilisateur VALUES (2, 2, 100, '15-feb-2024');
-INSERT INTO AchatUtilisateur VALUES (10, 5, 49.90, '29-feb-2024');
-INSERT INTO AchatUtilisateur VALUES (13, 1, 10, '10-mar-2024');
-INSERT INTO AchatUtilisateur VALUES (13, 1, 10, '10-apr-2024');
-INSERT INTO AchatUtilisateur VALUES (14, 2, 100, '15-apr-2024');
-INSERT INTO AchatUtilisateur VALUES (4, 4, 150, '25-apr-2024');
-INSERT INTO AchatUtilisateur VALUES (15, 3, 19.90, '20-may-2024');
-INSERT INTO AchatUtilisateur VALUES (6, 6, 200, '05-jun-2024');
-INSERT INTO AchatUtilisateur VALUES (16, 4, 150, '25-jun-2024');
-INSERT INTO AchatUtilisateur VALUES (17, 5, 49.90, '30-jul-2024');
-INSERT INTO AchatUtilisateur VALUES (18, 6, 200, '05-aug-2024');
-INSERT INTO AchatUtilisateur VALUES (17, 5, 49.90, '30-aug-2024');
-INSERT INTO AchatUtilisateur VALUES (19, 1, 10, '10-sep-2024');
-INSERT INTO AchatUtilisateur VALUES (19, 1, 10, '10-oct-2024');
-INSERT INTO AchatUtilisateur VALUES (20, 2, 100, '15-oct-2024');
-INSERT INTO AchatUtilisateur VALUES (19, 1, 10, '10-nov-2024');
-INSERT INTO AchatUtilisateur VALUES (21, 4, 150, '20-nov-2024');
+INSERT INTO AchatUtilisateur VALUES (1, 1, '10-feb-2023');
+INSERT INTO AchatUtilisateur VALUES (2, 2, '15-feb-2023');
+INSERT INTO AchatUtilisateur VALUES (1, 1, '10-mar-2023');
+INSERT INTO AchatUtilisateur VALUES (3, 3, '20-mar-2023');
+INSERT INTO AchatUtilisateur VALUES (1, 1, '10-apr-2023');
+INSERT INTO AchatUtilisateur VALUES (3, 3, '20-apr-2023');
+INSERT INTO AchatUtilisateur VALUES (4, 4, '25-apr-2023');
+INSERT INTO AchatUtilisateur VALUES (1, 1, '10-may-2023');
+INSERT INTO AchatUtilisateur VALUES (4, 2, '26-may-2023');
+INSERT INTO AchatUtilisateur VALUES (5, 5, '30-may-2023');
+INSERT INTO AchatUtilisateur VALUES (6, 6, '05-jun-2023');
+INSERT INTO AchatUtilisateur VALUES (1, 1, '10-jun-2023');
+INSERT INTO AchatUtilisateur VALUES (5, 5, '30-jun-2023');
+INSERT INTO AchatUtilisateur VALUES (1, 1, '10-jul-2023');
+INSERT INTO AchatUtilisateur VALUES (5, 5, '30-jul-2023');
+INSERT INTO AchatUtilisateur VALUES (1, 1, '10-aug-2023');
+INSERT INTO AchatUtilisateur VALUES (5, 5, '30-aug-2023');
+INSERT INTO AchatUtilisateur VALUES (1, 2, '10-sep-2023');
+INSERT INTO AchatUtilisateur VALUES (8, 2, '10-oct-2023');
+INSERT INTO AchatUtilisateur VALUES (9, 4, '25-nov-2023');
+INSERT INTO AchatUtilisateur VALUES (10, 5, '30-dec-2023');
+INSERT INTO AchatUtilisateur VALUES (11, 6, '05-jan-2024');
+INSERT INTO AchatUtilisateur VALUES (10, 5, '30-jan-2024');
+INSERT INTO AchatUtilisateur VALUES (12, 6, '05-feb-2024');
+INSERT INTO AchatUtilisateur VALUES (2, 2, '15-feb-2024');
+INSERT INTO AchatUtilisateur VALUES (10, 5, '29-feb-2024');
+INSERT INTO AchatUtilisateur VALUES (13, 1, '10-mar-2024');
+INSERT INTO AchatUtilisateur VALUES (13, 1, '10-apr-2024');
+INSERT INTO AchatUtilisateur VALUES (14, 2, '15-apr-2024');
+INSERT INTO AchatUtilisateur VALUES (4, 4, '25-apr-2024');
+INSERT INTO AchatUtilisateur VALUES (15, 3, '20-may-2024');
+INSERT INTO AchatUtilisateur VALUES (6, 6, '05-jun-2024');
+INSERT INTO AchatUtilisateur VALUES (16, 4, '25-jun-2024');
+INSERT INTO AchatUtilisateur VALUES (17, 5, '30-jul-2024');
+INSERT INTO AchatUtilisateur VALUES (18, 6, '05-aug-2024');
+INSERT INTO AchatUtilisateur VALUES (17, 5, '30-aug-2024');
+INSERT INTO AchatUtilisateur VALUES (19, 1, '10-sep-2024');
+INSERT INTO AchatUtilisateur VALUES (19, 1, '10-oct-2024');
+INSERT INTO AchatUtilisateur VALUES (20, 2, '15-oct-2024');
+INSERT INTO AchatUtilisateur VALUES (19, 1, '10-nov-2024');
+INSERT INTO AchatUtilisateur VALUES (21, 4, '20-nov-2024');
 select * from AchatUtilisateur;
 
 -- Insert AchatGroupe
-INSERT INTO AchatGroupe VALUES (1, 4, 150, '10-jan-2023');
-INSERT INTO AchatGroupe VALUES (2, 2, 100, '15-feb-2023');
-INSERT INTO AchatGroupe VALUES (3, 6, 200, '20-mar-2023');
-INSERT INTO AchatGroupe VALUES (4, 6, 200, '25-apr-2023');
-INSERT INTO AchatGroupe VALUES (5, 4, 150, '30-may-2023');
-INSERT INTO AchatGroupe VALUES (6, 4, 150, '05-jun-2023');
-INSERT INTO AchatGroupe VALUES (7, 4, 150, '10-jul-2023');
-INSERT INTO AchatGroupe VALUES (8, 2, 100, '15-aug-2023');
-INSERT INTO AchatGroupe VALUES (9, 2, 100, '20-sep-2023');
-INSERT INTO AchatGroupe VALUES (10, 6, 200, '25-oct-2023');
-INSERT INTO AchatGroupe VALUES (1, 4, 150, '10-jan-2024');
-INSERT INTO AchatGroupe VALUES (2, 2, 100, '15-feb-2024');
-INSERT INTO AchatGroupe VALUES (3, 6, 200, '20-mar-2024');
-INSERT INTO AchatGroupe VALUES (4, 6, 200, '25-apr-2024');
-INSERT INTO AchatGroupe VALUES (5, 4, 150, '30-may-2024');
-INSERT INTO AchatGroupe VALUES (6, 4, 150, '05-jun-2024');
-INSERT INTO AchatGroupe VALUES (7, 4, 150, '10-jul-2024');
-INSERT INTO AchatGroupe VALUES (8, 2, 100, '15-aug-2024');
-INSERT INTO AchatGroupe VALUES (9, 2, 100, '20-sep-2024');
-INSERT INTO AchatGroupe VALUES (10, 6, 200, '25-oct-2024');
-INSERT INTO AchatGroupe VALUES (1, 4, 150, '10-jan-2025');
-INSERT INTO AchatGroupe VALUES (2, 2, 100, '15-feb-2025');
-INSERT INTO AchatGroupe VALUES (3, 6, 200, '20-mar-2025');
-INSERT INTO AchatGroupe VALUES (4, 6, 200, '25-apr-2025');
-INSERT INTO AchatGroupe VALUES (5, 4, 150, '30-may-2025');
-INSERT INTO AchatGroupe VALUES (6, 4, 150, '05-jun-2025');
-INSERT INTO AchatGroupe VALUES (7, 4, 150, '10-jul-2025');
-INSERT INTO AchatGroupe VALUES (8, 2, 100, '15-aug-2025');
-INSERT INTO AchatGroupe VALUES (9, 2, 100, '20-sep-2025');
-INSERT INTO AchatGroupe VALUES (10, 6, 200, '25-oct-2025');
+INSERT INTO AchatGroupe VALUES (1, 4, '10-jan-2023');
+INSERT INTO AchatGroupe VALUES (2, 2, '15-feb-2023');
+INSERT INTO AchatGroupe VALUES (3, 6, '20-mar-2023');
+INSERT INTO AchatGroupe VALUES (4, 6, '25-apr-2023');
+INSERT INTO AchatGroupe VALUES (5, 4, '30-may-2023');
+INSERT INTO AchatGroupe VALUES (6, 4, '05-jun-2023');
+INSERT INTO AchatGroupe VALUES (7, 4, '10-jul-2023');
+INSERT INTO AchatGroupe VALUES (8, 2, '15-aug-2023');
+INSERT INTO AchatGroupe VALUES (9, 2, '20-sep-2023');
+INSERT INTO AchatGroupe VALUES (10, 6, '25-oct-2023');
+INSERT INTO AchatGroupe VALUES (1, 4, '10-jan-2024');
+INSERT INTO AchatGroupe VALUES (2, 2, '15-feb-2024');
+INSERT INTO AchatGroupe VALUES (3, 6, '20-mar-2024');
+INSERT INTO AchatGroupe VALUES (4, 6, '25-apr-2024');
+INSERT INTO AchatGroupe VALUES (5, 4, '30-may-2024');
+INSERT INTO AchatGroupe VALUES (6, 4, '05-jun-2024');
+INSERT INTO AchatGroupe VALUES (7, 4, '10-jul-2024');
+INSERT INTO AchatGroupe VALUES (8, 2, '15-aug-2024');
+INSERT INTO AchatGroupe VALUES (9, 2, '20-sep-2024');
+INSERT INTO AchatGroupe VALUES (10, 6, '25-oct-2024');
+INSERT INTO AchatGroupe VALUES (1, 4, '10-jan-2025');
+INSERT INTO AchatGroupe VALUES (2, 2, '15-feb-2025');
+INSERT INTO AchatGroupe VALUES (3, 6, '20-mar-2025');
+INSERT INTO AchatGroupe VALUES (4, 6, '25-apr-2025');
+INSERT INTO AchatGroupe VALUES (5, 4, '30-may-2025');
+INSERT INTO AchatGroupe VALUES (6, 4, '05-jun-2025');
+INSERT INTO AchatGroupe VALUES (7, 4, '10-jul-2025');
+INSERT INTO AchatGroupe VALUES (8, 2, '15-aug-2025');
+INSERT INTO AchatGroupe VALUES (9, 2, '20-sep-2025');
+INSERT INTO AchatGroupe VALUES (10, 6, '25-oct-2025');
 select * from AchatGroupe;
 
 -- Insert Employé
