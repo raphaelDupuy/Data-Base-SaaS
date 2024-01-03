@@ -56,7 +56,7 @@ CREATE TABLE Ticket (
 
 CREATE TABLE Licence (
     id_licence NUMBER(10) NOT NULL,
-    Durée NUMBER(3) CHECK (Durée IN (30, 365)) NOT NULL
+    Durée NUMBER(3) CHECK (Durée IN (30, 365)) NOT NULL,
     Prix NUMBER(6, 2) NOT NULL,
     Description VARCHAR2(255),
     PRIMARY KEY (id_licence)
@@ -92,7 +92,7 @@ CREATE TABLE Employé (
     Age NUMBER(3),
     Num_tel CHAR(10),
     Adresse VARCHAR2(100),
-    Poste VARCHAR2(20) CHECK (Poste IN ('Chef', 'Développeur', 'Commercial', 'Support'))
+    Poste VARCHAR2(20) CHECK (Poste IN ('Chef', 'Développeur', 'Commercial', 'Support')) NOT NULL,
     Salaire NUMBER(8, 2),
     Date_arrivée DATE,
     PRIMARY KEY (id_employé)
@@ -311,7 +311,24 @@ BEGIN
 	END IF;
 END;
 
+-- Trigger 6 : Supperssion du groupe quand la dernière personne le quitte
+CREATE OR REPLACE TRIGGER SuppressionGroupe
+AFTER DELETE ON Appartient
+FOR EACH ROW
+DECLARE
+    nb_membres INTEGER;
+BEGIN
+    -- Compter le nombre de membres restants dans le groupe
+    SELECT COUNT(*) INTO nb_membres
+    FROM Appartient
+    WHERE id_groupe = :OLD.id_groupe;
 
+    -- Si le nombre de membres est égal à 0, supprimer le groupe
+    IF nb_membres = 0 THEN
+        DELETE FROM Groupe
+        WHERE id_groupe = :OLD.id_groupe;
+    END IF;
+END SuppressionGroupe;
 
 -- C/ Jeu de données
 
