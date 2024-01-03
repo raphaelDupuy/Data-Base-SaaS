@@ -56,7 +56,7 @@ CREATE TABLE Ticket (
 
 CREATE TABLE Licence (
     id_licence NUMBER(10) NOT NULL,
-    Durée NUMBER(3) CHECK (Durée IN (30, 365)) NOT NULL,
+    Durée NUMBER(3) CHECK (Durée IN (30, 365)) NOT NULL, -- Il s'agit du plus proche que l'on puisse faire d'un Enum dans Sql Live
     Prix NUMBER(6, 2) NOT NULL,
     Description VARCHAR2(255),
     PRIMARY KEY (id_licence)
@@ -92,7 +92,7 @@ CREATE TABLE Employé (
     Age NUMBER(3),
     Num_tel CHAR(10),
     Adresse VARCHAR2(100),
-    Poste VARCHAR2(20) CHECK (Poste IN ('Chef', 'Développeur', 'Commercial', 'Support')) NOT NULL,
+    Poste VARCHAR2(20) CHECK (Poste IN ('Chef', 'Développeur', 'Commercial', 'Support')) NOT NULL, -- Il s'agit du plus proche que l'on puisse faire d'un Enum dans Sql Live
     Salaire NUMBER(8, 2),
     Date_arrivée DATE,
     PRIMARY KEY (id_employé)
