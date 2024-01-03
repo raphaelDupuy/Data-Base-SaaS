@@ -9,11 +9,6 @@ triggers done:
     AchatLicenceGroupeDoublon   /   SuppressionGroupe
     AchatLicenceUtilisateurDoublon   /   ReductionMensuelleUtilisateur
 
-triggers todo:
-
-
-    Enum poste employé / etat, Licence concernée ticket: certaines valeurs
-
 Diff Licence Entreprise / Particulier
 Ajouter Le prix dans AchatGroupe et AchatUtilisateur
 Changement de la durée des licences en nombre de jours

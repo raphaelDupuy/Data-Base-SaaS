@@ -107,13 +107,13 @@ CREATE TABLE Modifie (
     ON DELETE CASCADE
 );
 
-CREATE TABLE Gère (
+CREATE TABLE Récupère (
     id_employé NOT NULL,
-    id_licence NOT NULL,
+    id_ticket NOT NULL,
     Date_modification DATE,
     PRIMARY KEY (id_employé, id_licence, Date_modification),
     FOREIGN KEY (id_employé) REFERENCES Employé(id_employé),
-    FOREIGN KEY (id_licence) REFERENCES Licence(id_licence)
+    FOREIGN KEY (id_ticket) REFERENCES Ticket(id_ticket)
     ON DELETE CASCADE
 );
 
@@ -222,6 +222,24 @@ BEGIN
         RAISE_APPLICATION_ERROR(-20002, 'Ce groupe a déjà acheté cette licence valable un an.');
     END IF;
 END;
+
+-- Trigger 4 : Vérification que le ticket à gerer est bien en attente
+CREATE OR REPLACE TRIGGER TraitementTicket
+BEFORE INSERT ON Récupère
+FOR EACH ROW
+DECLARE
+	etat VARCHAR(10);
+BEGIN
+    -- Récupérer l'état actuel du Ticket à gerer
+    SELECT T.Statut INTO etat
+    FROM Ticket T
+    WHERE T.id_ticket = :NEW.id_ticket;
+	
+	IF etat = 'Traité' THEN
+        RAISE_APPLICATION_ERROR(-20003, 'Ce Ticket a déjà été géré');
+	END IF;
+END;
+
 
 -- Procedure : Suppression du groupe si le dernier membre le quitte
 CREATE OR REPLACE PROCEDURE SuppressionGroupe (
@@ -487,39 +505,24 @@ INSERT INTO Modifie VALUES (3, 1, '30-aug-2025', '1.5');
 INSERT INTO Modifie VALUES (7, 4, '05-sep-2025', '1.0');
 select * from Modifie;
 
--- Insert Gère
-INSERT INTO Gère VALUES (1, 1, '20-jun-2022');
-INSERT INTO Gère VALUES (2, 3, '18-jul-2022');
-INSERT INTO Gère VALUES (2, 3, '10-sep-2022');
-INSERT INTO Gère VALUES (2, 3, '15-nov-2022');
-INSERT INTO Gère VALUES (2, 3, '14-jan-2023');
-INSERT INTO Gère VALUES (1, 4, '19-mar-2023');
-INSERT INTO Gère VALUES (1, 1, '24-apr-2023');
-INSERT INTO Gère VALUES (1, 3, '11-may-2023');
-INSERT INTO Gère VALUES (5, 4, '29-jun-2023');
-INSERT INTO Gère VALUES (5, 4, '10-jul-2023');
-INSERT INTO Gère VALUES (2, 3, '15-aug-2023');
-INSERT INTO Gère VALUES (8, 4, '20-sep-2023');
-INSERT INTO Gère VALUES (9, 1, '25-oct-2023');
-INSERT INTO Gère VALUES (2, 2, '30-nov-2023');
-INSERT INTO Gère VALUES (2, 4, '20-dec-2023');
-INSERT INTO Gère VALUES (8, 5, '25-jan-2024');
-INSERT INTO Gère VALUES (2, 3, '29-feb-2024');
-INSERT INTO Gère VALUES (5, 4, '05-mar-2024');
-INSERT INTO Gère VALUES (2, 5, '10-apr-2024');
-INSERT INTO Gère VALUES (5, 6, '15-may-2024');
-INSERT INTO Gère VALUES (2, 2, '20-jun-2024');
-INSERT INTO Gère VALUES (8, 2, '25-jul-2024');
-INSERT INTO Gère VALUES (8, 1, '30-aug-2024');
-INSERT INTO Gère VALUES (9, 5, '05-sep-2024');
-INSERT INTO Gère VALUES (5, 6, '10-oct-2024');
-INSERT INTO Gère VALUES (9, 2, '15-nov-2024');
-INSERT INTO Gère VALUES (8, 2, '20-dec-2024');
-INSERT INTO Gère VALUES (2, 5, '25-jan-2025');
-INSERT INTO Gère VALUES (5, 1, '28-feb-2025');
-INSERT INTO Gère VALUES (8, 6, '05-mar-2025');
-INSERT INTO Gère VALUES (5, 2, '10-apr-2025');
-select * from Gère;
+-- Insert Récupère
+INSERT INTO Récupère VALUES (1, 19, '20-jun-2022');
+INSERT INTO Récupère VALUES (2, 1, '18-jul-2022');
+INSERT INTO Récupère VALUES (2, 18, '10-sep-2022');
+INSERT INTO Récupère VALUES (2, 13, '15-nov-2022');
+INSERT INTO Récupère VALUES (2, 12, '14-jan-2023');
+INSERT INTO Récupère VALUES (1, 11, '19-mar-2023');
+INSERT INTO Récupère VALUES (1, 10, '24-apr-2023');
+INSERT INTO Récupère VALUES (1, 9, '11-may-2023');
+INSERT INTO Récupère VALUES (5, 25, '29-jun-2023');
+INSERT INTO Récupère VALUES (5, 7, '10-jul-2023');
+INSERT INTO Récupère VALUES (2, 6, '15-aug-2023');
+INSERT INTO Récupère VALUES (8, 5, '20-sep-2023');
+INSERT INTO Récupère VALUES (9, 4, '25-oct-2023');
+INSERT INTO Récupère VALUES (2, 3, '30-nov-2023');
+INSERT INTO Récupère VALUES (2, 2, '20-dec-2023');
+INSERT INTO Récupère VALUES (8, 16, '25-jan-2024');
+select * from Récupère;
 
 -- Insert Appartient
 INSERT INTO Appartient VALUES (1, 1);
@@ -606,8 +609,6 @@ select * from AchatGroupe;
 select * from Employé;
 -- Quelles sont toutes les modifications faites aux logiciels ?
 select * from Modifie;
--- Quelles sont toutes les modifications faites aux licences ?
-select * from Gère;
 -- Quel utilisateur appartient à quel groupe ?
 select * from Appartient;
 -- Quels logiciels sont inclus dans quelles licences ?
