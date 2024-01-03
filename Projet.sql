@@ -295,26 +295,14 @@ BEGIN
         UPDATE Licence
         SET Prix = Prix - reduction
         WHERE id_licence = :NEW.id_licence;
-
     END IF;
+EXCEPTION
+     WHEN NO_DATA_FOUND THEN 
+     	INSERT INTO AchatGroupe (id_groupe, id_licence, date_achat)
+            VALUES (:NEW.id_groupe, :NEW.id_licence, SYSDATE);
+
 END;
 
-
--- Trigger 6 : Un groupe est supprimé si tous les membres ont quitté le groupe.
-CREATE OR REPLACE TRIGGER SuppressionGroupe
-AFTER DELETE ON Appartient
-FOR EACH ROW
-DECLARE
-    nb_membres INTEGER;
-BEGIN
-    SELECT COUNT(*) INTO nb_membres
-    FROM Appartient
-    WHERE id_groupe = :OLD.id_groupe;
-    IF nb_membres = 0 THEN
-        DELETE FROM Groupe
-        WHERE id_groupe = :OLD.id_groupe;
-    END IF;
-END;
 
 
 -- C/ Jeu de données
@@ -413,12 +401,13 @@ INSERT INTO Ticket VALUES (29, 'Ticket 29', 'Contenu du ticket 29', 'Logiciel 6'
 INSERT INTO Ticket VALUES (30, 'Ticket 30', 'Contenu du ticket 30', 'Logiciel 3', 30, '05-jun-2025', 'En attente');
 
 -- Insert Licence
-INSERT INTO Licence VALUES (1, 'Un mois', 10, 'Licence 1');
-INSERT INTO Licence VALUES (2, 'Un an', 100, 'Licence 2');
-INSERT INTO Licence VALUES (3, 'Un mois', 19.90, 'Licence 3');
-INSERT INTO Licence VALUES (4, 'Un an', 150, 'Licence 4');
-INSERT INTO Licence VALUES (5, 'Un mois', 49.90, 'Licence 5');
-INSERT INTO Licence VALUES (6, 'Un an', 200, 'Licence 6');
+INSERT INTO Licence VALUES (1, 30, 10, 'Licence 1');
+INSERT INTO Licence VALUES (2, 365, 100, 'Licence 2');
+INSERT INTO Licence VALUES (3, 30, 19.90, 'Licence 3');
+INSERT INTO Licence VALUES (4, 365, 150, 'Licence 4');
+INSERT INTO Licence VALUES (5, 30, 49.90, 'Licence 5');
+INSERT INTO Licence VALUES (6, 365, 200, 'Licence 6');
+select * from Licence;
 
 -- Insert AchatUtilisateur
 INSERT INTO AchatUtilisateur VALUES (1, 1, '10-feb-2023');
