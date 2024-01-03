@@ -5,14 +5,11 @@ permissions:
 
     Un membre du support a accès aux tables Ticket, Licence. Il a la permission de modifier Ticket.
 
+triggers done:
+    AchatLicenceGroupeDoublon   /   AchatLicenceGroupeUpgrade   /   SuppressionGroupe
+    AchatLicenceUtilisateurDoublon   /   AchatLicenceUtilisateurUpgrade   /   ReductionMensuelleUtilisateur
+
 triggers todo:
-    Un utilisateur n’a pas le droit d’acheter deux fois la même licence alors que son abonnement n’est pas expiré.
-    Il peut cependant acheter une licence plus chère, dans ce cas il paiera le prix de la nouvelle licence moins le prix de sa licence actuelle 
-    S’il achète une licence moins chère, il n’a pas de réduction
-
-    Si l’utilisateur a acheté 12 fois d’affilé la même licence d’une durée de 1 mois, il reçoit gratuitement 1 mois gratuit de cette licence. 
-
-    Si tous les membres d’un groupe le quittent, le groupe est supprimé.
 
     Enum poste employé / etat, Licence concernée ticket: certaines valeurs
 
@@ -20,7 +17,6 @@ Diff Licence Entreprise / Particulier
 
 -- Quelle est la licence la plus vendue ? -> pas le max mais la liste entière
 -- Quels logiciels ont été modifiés le plus suite à des Tickets ? - modifier ticket: rajouter la licence sur laquelle l'objet porte, (e.g. en début d'objet)
-
 
 ---------------------------------
 

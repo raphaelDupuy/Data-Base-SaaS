@@ -132,7 +132,7 @@ CREATE TABLE Inclue (
 -- B/ Intégrité des données : les triggers
 
 -- Trigger 1 : Un utilisateur ne peut pas acheter une licence si il a déjà acheté la même licence.
-CREATE OR REPLACE TRIGGER AchatLicenceUtilisateurDoublon
+CREATE OR REPLACE TRIGGER UtilisateurDoublon
 BEFORE INSERT ON AchatUtilisateur
 FOR EACH ROW
 DECLARE
@@ -167,7 +167,7 @@ BEGIN
 END;
 
 -- Trigger 2 : Un utilisateur peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
-CREATE OR REPLACE TRIGGER AchatLicenceUtilisateur_Reduction
+CREATE OR REPLACE TRIGGER UtilisateurUpgrade
 BEFORE INSERT ON AchatUtilisateur
 FOR EACH ROW
 DECLARE
@@ -203,25 +203,26 @@ BEGIN
     END IF;
 END;
 
-
--- Trigger 3 : Un groupe est supprimé si tous les membres ont quitté le groupe.
-CREATE OR REPLACE TRIGGER SuppressionGroupe
-AFTER DELETE ON Appartient
+-- Trigger 3 : Un utilisateur qui a acheté la même licence mensuelle 12 fois obtient 1 mois gratuit.
+CREATE OR REPLACE TRIGGER ReductionMensuelleUtilisateur
+BEFORE INSERT ON AchatUtilisateur
 FOR EACH ROW
 DECLARE
-    nb_membres INTEGER;
+    nb_achats INTEGER;
 BEGIN
-    SELECT COUNT(*) INTO nb_membres
-    FROM Appartient
-    WHERE id_groupe = :OLD.id_groupe;
-    IF nb_membres = 0 THEN
-        DELETE FROM Groupe
-        WHERE id_groupe = :OLD.id_groupe;
+    SELECT COUNT(*) INTO nb_achats
+    FROM AchatUtilisateur au, Licence l
+    WHERE au.id_utilisateur = :NEW.id_utilisateur
+    AND au.id_licence = l.id_licence
+    AND l.Durée = 'Un mois';
+    IF MOD(nb_achats, 12) = 0 THEN
+        :NEW.Date_achat := :NEW.Date_achat + 30;
     END IF;
 END;
 
+
 -- Trigger 4 : Un groupe ne peut pas acheter une licence si il a déjà acheté la même licence.
-CREATE OR REPLACE TRIGGER AchatLicenceGroupeDoublon
+CREATE OR REPLACE TRIGGER GroupeDoublon
 BEFORE INSERT ON AchatGroupe
 FOR EACH ROW
 DECLARE
@@ -255,7 +256,7 @@ BEGIN
 END;
 
 -- Trigger 5 : Un groupe peut acheter une licence plus chère que celle qu'il a déjà, cela lui donne une réduction du prix de la licence - le prix de sa licence actuelle divisée par le nombre de jours qu'il a utilisé.
-CREATE OR REPLACE TRIGGER AchatLicenceGroupeUpgrade
+CREATE OR REPLACE TRIGGER GroupeUpgrade
 BEFORE INSERT ON AchatGroupe
 FOR EACH ROW
 DECLARE
@@ -291,22 +292,23 @@ BEGIN
     END IF;
 END;
 
--- Trigger 6 : Un utilisateur qui a acheté la même licence mensuelle 12 fois obtient 1 mois gratuit.
-CREATE OR REPLACE TRIGGER ReductionLicenceMensuelle
-BEFORE INSERT ON AchatUtilisateur
+
+-- Trigger 6 : Un groupe est supprimé si tous les membres ont quitté le groupe.
+CREATE OR REPLACE TRIGGER SuppressionGroupe
+AFTER DELETE ON Appartient
 FOR EACH ROW
 DECLARE
-    nb_achats INTEGER;
+    nb_membres INTEGER;
 BEGIN
-    SELECT COUNT(*) INTO nb_achats
-    FROM AchatUtilisateur au, Licence l
-    WHERE au.id_utilisateur = :NEW.id_utilisateur
-    AND au.id_licence = l.id_licence
-    AND l.Durée = 'Un mois';
-    IF MOD(nb_achats, 12) = 0 THEN
-        :NEW.Date_achat := :NEW.Date_achat + 30;
+    SELECT COUNT(*) INTO nb_membres
+    FROM Appartient
+    WHERE id_groupe = :OLD.id_groupe;
+    IF nb_membres = 0 THEN
+        DELETE FROM Groupe
+        WHERE id_groupe = :OLD.id_groupe;
     END IF;
 END;
+
 
 -- C/ Jeu de données
 
