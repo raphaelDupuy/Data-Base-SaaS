@@ -51,6 +51,7 @@ CREATE TABLE Ticket (
     Statut VARCHAR2(10),
     PRIMARY KEY (id_ticket),
     FOREIGN KEY (id_utilisateur) REFERENCES Utilisateur(id_utilisateur)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Licence (
@@ -68,6 +69,7 @@ CREATE TABLE AchatUtilisateur (
     PRIMARY KEY (id_utilisateur, id_licence, Date_achat),
     FOREIGN KEY (id_utilisateur) REFERENCES Utilisateur(id_utilisateur),
     FOREIGN KEY (id_licence) REFERENCES Licence(id_licence)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE AchatGroupe (
@@ -77,6 +79,7 @@ CREATE TABLE AchatGroupe (
     PRIMARY KEY (id_groupe, id_licence, Date_achat),
     FOREIGN KEY (id_groupe) REFERENCES Groupe(id_groupe),
     FOREIGN KEY (id_licence) REFERENCES Licence(id_licence)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Employé (
@@ -101,6 +104,7 @@ CREATE TABLE Modifie (
     PRIMARY KEY (id_employé, id_logiciel, version),
     FOREIGN KEY (id_employé) REFERENCES Employé(id_employé),
     FOREIGN KEY (id_logiciel) REFERENCES Logiciel(id_logiciel)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Gère (
@@ -110,6 +114,7 @@ CREATE TABLE Gère (
     PRIMARY KEY (id_employé, id_licence, Date_modification),
     FOREIGN KEY (id_employé) REFERENCES Employé(id_employé),
     FOREIGN KEY (id_licence) REFERENCES Licence(id_licence)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Appartient (
@@ -118,6 +123,7 @@ CREATE TABLE Appartient (
     PRIMARY KEY (id_groupe, id_utilisateur),
     FOREIGN KEY (id_groupe) REFERENCES Groupe(id_groupe),
     FOREIGN KEY (id_utilisateur) REFERENCES Utilisateur(id_utilisateur)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Inclue (
@@ -126,6 +132,7 @@ CREATE TABLE Inclue (
     PRIMARY KEY (id_logiciel, id_licence),
     FOREIGN KEY (id_logiciel) REFERENCES Logiciel(id_logiciel),
     FOREIGN KEY (id_licence) REFERENCES Licence(id_licence)
+    ON DELETE CASCADE
 );
 
 
