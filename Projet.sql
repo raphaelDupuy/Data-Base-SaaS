@@ -110,7 +110,7 @@ CREATE TABLE Modifie (
 CREATE TABLE Récupère (
     id_employé NOT NULL,
     id_ticket NOT NULL,
-    Date_modification DATE,
+    Date_récupération DATE,
     PRIMARY KEY (id_employé, id_licence, Date_modification),
     FOREIGN KEY (id_employé) REFERENCES Employé(id_employé),
     FOREIGN KEY (id_ticket) REFERENCES Ticket(id_ticket)
@@ -240,6 +240,22 @@ BEGIN
 	END IF;
 END;
 
+-- Trigger 5 : Vérifier que la date est valide
+CREATE OR REPLACE TRIGGER TraitementTicket
+BEFORE INSERT ON Récupère
+FOR EACH ROW
+DECLARE
+	date_envoi DATE;
+BEGIN
+    -- Récupérer la date d'envoi du ticket à gérer
+    SELECT date_envoi INTO date_envoi
+    FROM Ticket 
+    WHERE id_ticket = :NEW.id_ticket;
+	
+	IF date_envoi > :NEW.Date_récupération THEN
+        RAISE_APPLICATION_ERROR(-20004, 'la date est invalide');
+	END IF;
+END;
 
 -- Procedure : Suppression du groupe si le dernier membre le quitte
 CREATE OR REPLACE PROCEDURE SuppressionGroupe (
