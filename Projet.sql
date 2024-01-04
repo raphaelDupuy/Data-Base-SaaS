@@ -703,12 +703,20 @@ where t.Logiciel_concerné like l.Nom
 group by l.Nom
 order by COUNT(*) desc;
 
--- Quel argent les licences ont elles rapporté à la Saas ?
-SELECT l.id_licence, COUNT(au.id_licence) * l.prix AS "Argent Rapporté"
+-- Quel argent les Utilisateurs ont ils rapporté à la Saas ?
+SELECT l.id_licence, (COUNT(au.id_licence) + COUNT(ag.id_licence)) * l.prix AS "Argent Rapporté"
 FROM AchatUtilisateur au
 JOIN Licence l ON au.id_licence = l.id_licence
+JOIN AchatGroupe ag ON ag.id_licence = l.id_licence
 GROUP BY l.id_licence, l.prix
-ORDER BY COUNT(au.id_licence) * l.prix DESC;
+ORDER BY (COUNT(au.id_licence) + COUNT(ag.id_licence)) * l.prix DESC;
+
+-- Quel argent les groupes ont rapporté à la Saas ?
+SELECT l.id_licence, COUNT(ag.id_licence) * l.prix AS "Argent Rapporté"
+FROM AchatGroupe ag
+JOIN Licence l ON ag.id_licence = l.id_licence
+GROUP BY l.id_licence, l.prix
+ORDER BY COUNT(ag.id_licence) * l.prix DESC;
 
 -- E/ Vues
 
