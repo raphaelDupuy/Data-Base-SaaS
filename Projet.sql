@@ -281,7 +281,7 @@ BEGIN
         DELETE FROM Groupe
         WHERE id_groupe = p_id_groupe;
     END IF;
-END SupprimerMembre;
+END;
 
 -- C/ Jeu de données
 
@@ -630,13 +630,13 @@ select * from Appartient;
 -- Quels logiciels sont inclus dans quelles licences ?
 select * from Inclue;
 
--- Quels groupes et combien ont-ils acheté de licences ?
+-- Combien de licences les groupes ont-ils achetés ?
 select distinct g.Nom, count(ag.id_groupe) as "Nombre de licences achetées"
 from Groupe g, AchatGroupe ag
 where g.id_groupe = ag.id_groupe
 group by g.Nom;
 
--- Combien de licences ont acheté en moyenne les groupes ?
+-- Combien de licences ont acheté les groupes en moyenne ?
 select avg(nb_licences) as "Nombre de licences achetées en moyenne par groupe"
 from (select count(ag.id_groupe) as nb_licences
     from Groupe g, AchatGroupe ag
@@ -654,7 +654,7 @@ select count(*) as "Nombre d'employés Commercial"
 from Employé
 where Poste = 'Commercial';
 
--- Combien d'employés dans la SAAS ?
+-- Combien d'employés sont dans la SAAS ?
 select count(*) as "Nombre d'employés dans la SAAS"
 from Employé;
 
@@ -723,13 +723,20 @@ and au.id_licence = l.id_licence
 and l.id_licence = i.id_licence
 and i.id_logiciel = 4;
 
--- Quels logiciels ont été modifiés le plus suite à des Ticket ? - WIP
--- SELECT l.Nom AS "Nom du logiciel", COUNT(*) AS "Nombre de modifications"
--- FROM Ticket t, Modifie m
--- JOIN Logiciel l ON m.id_logiciel = l.id_logiciel
--- WHERE t.Objet LIKE CONCAT('%', l.Nom, '%') OR t.Contenu LIKE CONCAT('%', l.Nom, '%')
--- GROUP BY l.Nom
--- ORDER BY COUNT(*) DESC;
+-- Quels logiciels ont été modifiés le plus suite à des Tickets ?
+select l.Nom as "Nom du logiciel", COUNT(*) as "Nombre de modifications"
+from Ticket t, Modifie m
+join Logiciel l on m.id_logiciel = l.id_logiciel
+where t.Logiciel_concerné like l.Nom
+group by l.Nom
+order by COUNT(*) desc;
+
+-- Quelle licence a rapporté le plus d'argent à la Saas ?
+SELECT l.id_licence, COUNT(au.id_licence) * l.prix AS "Argent Rapporté"
+FROM AchatUtilisateur au
+JOIN Licence l ON au.id_licence = l.id_licence
+GROUP BY l.id_licence, l.prix
+ORDER BY COUNT(au.id_licence) * l.prix DESC;
 
 -- E/ Vues
 
