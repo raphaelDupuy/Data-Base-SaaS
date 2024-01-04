@@ -111,7 +111,7 @@ CREATE TABLE Récupère (
     id_employé NOT NULL,
     id_ticket NOT NULL,
     Date_récupération DATE,
-    PRIMARY KEY (id_employé, id_licence, Date_modification),
+    PRIMARY KEY (id_employé, id_ticket, Date_modification),
     FOREIGN KEY (id_employé) REFERENCES Employé(id_employé),
     FOREIGN KEY (id_ticket) REFERENCES Ticket(id_ticket)
     ON DELETE CASCADE
@@ -612,9 +612,9 @@ select * from Utilisateur;
 select * from Groupe;
 -- Quels sont tous les logiciels ?
 select * from Logiciel;
--- Quels sont tous les ticlets ?
+-- Quels sont tous les tickets ?
 select * from Ticket;
--- Quelles sont toutes les licences
+-- Quelles sont toutes les licences ?
 select * from Licence;
 -- Quels sont tous les achats réalisés par des utilisateurs triés par date d'achat ?
 select * from AchatUtilisateur
