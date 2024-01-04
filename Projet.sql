@@ -333,7 +333,7 @@ INSERT INTO Ticket VALUES (6, 'Connexion instable', 'Déconnexions fréquentes d
 INSERT INTO Ticket VALUES (7, 'Police illisible', 'Texte flou.', 'NovaWord', 7, '10-jul-2023', 'Traité');
 INSERT INTO Ticket VALUES (8, 'Cellules vides', 'Données disparues dans le tableau.', 'NovaSheet', 8, '15-aug-2023', 'En attente');
 INSERT INTO Ticket VALUES (9, 'Graphique déformé', 'Distorsion des éléments graphiques.', 'NovaSlide', 9, '20-sep-2023', 'Traité');
-INSERT INTO Ticket VALUES (10, 'Carnet inaccessible', '*Carnet de notes inaccessible.', 'NovaNote', 10, '25-oct-2023', 'Traité');
+INSERT INTO Ticket VALUES (10, 'Carnet inaccessible', 'Carnet de notes inaccessible.', 'NovaNote', 10, '25-oct-2023', 'Traité');
 INSERT INTO Ticket VALUES (11, 'Événement non enregistré', 'Nouvel événement non ajouté au calendrier.', 'NovaCalendar', 11, '30-nov-2023', 'Traité');
 INSERT INTO Ticket VALUES (12, 'Audio perturbé', 'Problèmes de son lors des appels.', 'NovaConnect', 12, '05-dec-2023', 'Traité');
 INSERT INTO Ticket VALUES (13, 'Mise en page altérée', 'Disposition du document désorganisée.', 'NovaWord', 13, '10-jan-2024', 'Traité');
