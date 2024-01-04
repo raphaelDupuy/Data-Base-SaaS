@@ -1,18 +1,5 @@
 -- A/ Création du schéma de la base de données
 
-Drop Table Utilisateur CASCADE CONSTRAINTS;
-Drop Table Achatgroupe CASCADE CONSTRAINTS;
-Drop Table Achatutilisateur CASCADE CONSTRAINTS;
-Drop Table Appartient CASCADE CONSTRAINTS;
-Drop Table Employé CASCADE CONSTRAINTS;
-Drop Table Groupe CASCADE CONSTRAINTS;
-Drop Table Gère CASCADE CONSTRAINTS;
-Drop Table Inclue CASCADE CONSTRAINTS;
-Drop Table Licence CASCADE CONSTRAINTS;
-Drop Table Logiciel CASCADE CONSTRAINTS;
-Drop Table Modifie CASCADE CONSTRAINTS;
-Drop Table Ticket CASCADE CONSTRAINTS;
-
 CREATE TABLE Utilisateur (
     id_utilisateur NUMBER(10) NOT NULL,
     Nom VARCHAR2(30) NOT NULL,
@@ -171,8 +158,6 @@ BEGIN
 
 END;
 
-
-
 -- Trigger 2 : Un utilisateur qui a acheté la même licence mensuelle 12 fois obtient 1 mois gratuit.
 CREATE OR REPLACE TRIGGER ReductionMensuelleUtilisateur
 BEFORE INSERT ON AchatUtilisateur
@@ -189,7 +174,6 @@ BEGIN
         :NEW.Date_achat := :NEW.Date_achat + 30;
     END IF;
 END;
-
 
 -- Trigger 3 : Un groupe ne peut pas acheter une licence si il a déjà acheté la même licence.
 CREATE OR REPLACE TRIGGER GroupeDoublon
@@ -316,7 +300,6 @@ INSERT INTO Utilisateur VALUES (27, 'Flores', 'Gabriela', 'gabrielaflores@gmail.
 INSERT INTO Utilisateur VALUES (28, 'Gomez', 'Andres', 'andresgomez@gmail.com', 28, '25-apr-2025', '0787420052', '123 Cranberry Street, Warsaw', 'aWEsOme42');
 INSERT INTO Utilisateur VALUES (29, 'Reyes', 'Valentina', 'valentinareyes@gmail.com', 40, '30-may-2025', '0662352068', '456 Strawberry Street, London', 'password18');
 INSERT INTO Utilisateur VALUES (30, 'Morales', 'Camila', 'camilamorales@free.fr', 27, '05-jun-2025', '0688402069', '789 Raspberry Street, Paris', 'password19');
-select * from Utilisateur;
 
 -- Les données ont été générées par IA à partir du 1er insert fait manuellemnt. Quelques valeurs, principalement les numéros de téléphone, les mots de passe et les noms des villes ont ensuite été modifiées pour plus de réalisme.
 
@@ -331,7 +314,6 @@ INSERT INTO Groupe VALUES (7, 'Groupe 7', 'Groupe de test 7');
 INSERT INTO Groupe VALUES (8, 'Groupe 8', 'Groupe de test 8');
 INSERT INTO Groupe VALUES (9, 'Groupe 9', 'Groupe de test 9');
 INSERT INTO Groupe VALUES (10, 'Le Super Groupe de Camila', 'Groupe de Camila');
-select * from Groupe;
 
 -- Insert Logiciel
 INSERT INTO Logiciel VALUES (1, 'Logiciel 1', 'Logiciel de test 1');
@@ -340,7 +322,6 @@ INSERT INTO Logiciel VALUES (3, 'Logiciel 3', 'Logiciel de test 3');
 INSERT INTO Logiciel VALUES (4, 'Logiciel 4', 'Logiciel de test 4');
 INSERT INTO Logiciel VALUES (5, 'Logiciel 5', 'Logiciel de test 5');
 INSERT INTO Logiciel VALUES (6, 'Logiciel 6', 'Logiciel de test 6');
-select * from Logiciel;
 
 -- Insert Ticket
 INSERT INTO Ticket VALUES (1, 'Bug bizarre', 'Il y a un bug quand on charge le fichier excel dans le Logiciel 1', 'Logiciel 1', 1, '10-jan-2023', 'Traité');
@@ -373,7 +354,6 @@ INSERT INTO Ticket VALUES (27, 'Ticket 27', 'Contenu du ticket 27', 'Logiciel 2'
 INSERT INTO Ticket VALUES (28, 'Ticket 28', 'Contenu du ticket 28', 'Logiciel 5', 28, '25-apr-2025', 'En attente');
 INSERT INTO Ticket VALUES (29, 'Ticket 29', 'Contenu du ticket 29', 'Logiciel 6', 29, '30-may-2025', 'En attente');
 INSERT INTO Ticket VALUES (30, 'Ticket 30', 'Contenu du ticket 30', 'Logiciel 3', 30, '05-jun-2025', 'En attente');
-select * from Ticket;
 
 -- Insert Licence
 INSERT INTO Licence VALUES (1, 30, 10, 'Licence 1');
@@ -382,7 +362,6 @@ INSERT INTO Licence VALUES (3, 30, 19.90, 'Licence 3');
 INSERT INTO Licence VALUES (4, 365, 150, 'Licence 4');
 INSERT INTO Licence VALUES (5, 30, 49.90, 'Licence 5');
 INSERT INTO Licence VALUES (6, 365, 200, 'Licence 6');
-select * from Licence;
 
 -- Insert AchatUtilisateur
 -- Insert AchatUtilisateur
@@ -426,7 +405,6 @@ INSERT INTO AchatUtilisateur VALUES (19, 1, '10-oct-2024');
 INSERT INTO AchatUtilisateur VALUES (20, 2, '15-oct-2024');
 INSERT INTO AchatUtilisateur VALUES (19, 1, '10-nov-2024');
 INSERT INTO AchatUtilisateur VALUES (21, 4, '20-nov-2024');
-select * from AchatUtilisateur;
 
 -- Insert AchatGroupe
 INSERT INTO AchatGroupe VALUES (1, 4, '10-jan-2023');
@@ -459,7 +437,6 @@ INSERT INTO AchatGroupe VALUES (7, 4, '10-jul-2025');
 INSERT INTO AchatGroupe VALUES (8, 2, '15-aug-2025');
 INSERT INTO AchatGroupe VALUES (9, 2, '20-sep-2025');
 INSERT INTO AchatGroupe VALUES (10, 6, '25-oct-2025');
-select * from AchatGroupe;
 
 -- Insert Employé
 INSERT INTO Employé VALUES (1, 'Johnson', 'David', 'david.johnson@saas.com', 28, '0611004081', '10 Downing Street, London', 'Chef', '60000.00', '01-mar-2022');
@@ -477,7 +454,6 @@ INSERT INTO Employé VALUES (12, 'Lewis', 'Olivia', 'olivia.lewis@saas.com', 25,
 INSERT INTO Employé VALUES (13, 'Walker', 'James', 'james.walker@saas.com', 29, '0687451236', '963 Sunset Boulevard, Los Angeles', 'Commercial', '45000.00', '12-may-2024');
 INSERT INTO Employé VALUES (14, 'Brant', 'Ava', 'ava.brant@saas.com', 26, '0654789321', '741 Vine Street, Los Angeles', 'Support', '35000.00', '27-jul-2024');
 INSERT INTO Employé VALUES (15, 'Young', 'William', 'william.young@saas.com', 30, '0654024060', '369 Hollywood Boulevard, Los Angeles', 'Commercial', '45000.00', '11-oct-2024');
-select * from Employé;
 
 -- Insert Modifie
 INSERT INTO Modifie VALUES (1, 1, '10-mar-2022', '0.1');
@@ -519,7 +495,6 @@ INSERT INTO Modifie VALUES (7, 2, '20-jun-2025', '1.3');
 INSERT INTO Modifie VALUES (6, 5, '25-jul-2025', '0.4');
 INSERT INTO Modifie VALUES (3, 1, '30-aug-2025', '1.5');
 INSERT INTO Modifie VALUES (7, 4, '05-sep-2025', '1.0');
-select * from Modifie;
 
 -- Insert Récupère
 INSERT INTO Récupère VALUES (1, 19, '20-jun-2022');
@@ -538,7 +513,6 @@ INSERT INTO Récupère VALUES (9, 4, '25-oct-2023');
 INSERT INTO Récupère VALUES (2, 3, '30-nov-2023');
 INSERT INTO Récupère VALUES (2, 2, '20-dec-2023');
 INSERT INTO Récupère VALUES (8, 16, '25-jan-2024');
-select * from Récupère;
 
 -- Insert Appartient
 INSERT INTO Appartient VALUES (1, 1);
@@ -577,7 +551,6 @@ INSERT INTO Appartient VALUES (9, 29);
 INSERT INTO Appartient VALUES (9, 30);
 INSERT INTO Appartient VALUES (9, 28);
 INSERT INTO Appartient VALUES (10, 30);
-select * from Appartient;
 
 -- Insert Inclue
 INSERT INTO Inclue VALUES (1, 1);
@@ -602,7 +575,6 @@ INSERT INTO Inclue VALUES (6, 2);
 INSERT INTO Inclue VALUES (6, 3);
 INSERT INTO Inclue VALUES (6, 4);
 INSERT INTO Inclue VALUES (6, 5);
-select * from Inclue;
 
 --D/ Manipulation des données
 
