@@ -731,7 +731,7 @@ where t.Logiciel_concerné like l.Nom
 group by l.Nom
 order by COUNT(*) desc;
 
--- Quelle licence a rapporté le plus d'argent à la Saas ?
+-- Quel argent les licences ont elles rapporté à la Saas ?
 SELECT l.id_licence, COUNT(au.id_licence) * l.prix AS "Argent Rapporté"
 FROM AchatUtilisateur au
 JOIN Licence l ON au.id_licence = l.id_licence
